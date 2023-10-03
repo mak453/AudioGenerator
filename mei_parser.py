@@ -69,30 +69,41 @@ def set_score_info(root, score):
     info = ["meter.count", "meter.unit", "keysig", "key.mode"]
     a = root.attrib
 
-    if set(info).issubset(a):
+    if not score.initialized and set(info).issubset(a):
         score.time_sig = (a[info[0]], a[info[1]])
         score.key = score.key_signatures[a[info[2]] + " " + a[info[3]]]
-        return True
-    # if set(info[0:1]).issubset(a):
-    #     # add_event("")
-    # elif set(info[2:3]).issubset(a):
-    #     #add_event
-    # else:
-    #     #add_event
+        score.disp()
+        return 1
 
-    return False
+    return 0
 
 
-large_container = ["titleStmt", "scoreDef", "chord", "beam", "note"]
+large_container = ["titleStmt", "scoreDef",
+                   "staffDef", "chord", "beam", "note"]
 
 
 def get_info(root: Element, num, score):
+
     if num == 0:
         set_work_info(root, score)
     elif num == 1:
-        if set_score_info(root, score):
+        action = set_score_info(root, score)
+        if action == 1:
             score.initialized = True
-        # else:
+    elif score.initialized and num == 2:
+        if int(root.attrib["n"]) > len(score.staffs):
+
+            curr_staff.add_event(
+                "Key change " + str(score.key[0]) + " " + str(score.key[3]))
+            curr_staff.add_event(
+                "Time change " + str(score.time_sig[0]) + "/" + str(score.time_sig[1]))
+            curr_staff.add_event(
+                "Tempo change " + str(score.tempo[0]) + " " + str(score.tempo[1]))
+
+            score.staffs.append(curr_staff)
+            print("new staff " + str(len(score.staffs)))
+        else:
+            curr_staff
 
     return
 
@@ -103,6 +114,7 @@ def traverse(root: Element, level, score):
     if head in large_container:
         index = int(large_container.index(head))
         get_info(root, int(large_container.index(head)), score)
+
         if index == large_container[2] or index == large_container[3]:
             get_info(root, int(large_container.index(head)), score)
 

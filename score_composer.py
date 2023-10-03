@@ -169,9 +169,11 @@ class Score:
     def __init__(self):
         self.title = "Title"
         self.composer = "Composer"
-        self.key = ("C", "major", 0, 0)
+
+        self.key = ("C", 0, 0, "major")
         self.tempo = (112, "Moderato")
         self.time_sig = (4, 4)
+
         self.staffs: Staff = []
         self.current = 0
         self.size = 0
@@ -186,23 +188,13 @@ class Score:
     def disp(self):
         """_summary_
         """
-        print(self.title + " by " + self.composer + "\n" + self.key +
-              " | Time Signature: " + self.time_sig + "\nTempo: " + str(self.tempo) + "\n")
+        print(self.title + " by " + self.composer + "\n" + str(self.key[0]) + " " + str(self.key[3]) +
+              " | Time Signature: " + str(self.time_sig[0]) + "/" + str(self.time_sig[1]) + "\nTempo " + str(self.tempo[0]) + " BPM\n")
 
     def __str__(self):
 
-        work = self.title + " by " + self.composer
-        info = str(self.key[0]) + " " + str(self.key[3]) + " | Time Signature: " + \
-            str(self.time_sig[0]) + "/" + str(self.time_sig[1])
+        string = self.title + " by " + self.composer + "\n\n"
 
-        if self.tempo[0] == 0:
-            tempo = str(self.tempo[1]) + "\n\n"
-        elif self.tempo[1] == "":
-            tempo = str(self.tempo[0]) + "bpm\n\n"
-        else:
-            tempo = str(self.tempo[1]) + " " + str(self.tempo[0]) + "bpm\n\n"
-
-        string = work + "\n" + info + "\n" + tempo
         for i, staff in enumerate(self.staffs):
             string += "Staff " + str(i+1) + ": " + str(staff) + "\n\n"
 
