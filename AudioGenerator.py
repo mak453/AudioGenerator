@@ -53,7 +53,9 @@ if __name__ == "__main__":
 
     scores, version = mei_parser.disect_mei(args.mei_file)
 
-    # print(scores)
+    for score in scores:
+        print(score)
+        
     # one = song()
     # one.sample_rate = args.sample_rate
     # one.bit_depth = args.bit_depth
