@@ -1,211 +1,205 @@
-"""_summary_
-
-"""
-
-
-def check(*arg, exp):
-    """_summary_
-
-    Args:
-        exp (_type_): _description_
-
-    Raises:
-        TypeError: _description_
-    """
-
-    error = False
-    for num, (i, j) in enumerate(zip(arg, exp)):
-        try:
-            if type(i) != j:
-                error = True
-                raise TypeError()
-        except TypeError:
-            print("\targ" + str(num) + " expected type: " +
-                  str(j) + " recieved type: " + str(type(i)))
-            continue
-    if error:
-        exit()
-
-
 class Note:
-    """_summary_
-    """
 
-    def __init__(self, pitch, octave, duration):
-        check(pitch, octave, duration, exp=[str, str, str])
-        self.pitch = pitch
-        self.octave = octave
-        self.duration = duration
+    pitches = {
+        "C0": 16.35,
+        "C#0": 17.32,
+        "Db0": 17.32,
+        "D0": 18.35,
+        "D#0": 19.44,
+        "Eb0": 19.44,
+        "E0": 20.6,
+        "F0": 21.82,
+        "F#0": 23.12,
+        "Gb0": 23.12,
+        "G0": 24.5,
+        "G#0": 25.95,
+        "Ab0": 25.95,
+        "A0": 27.5,
+        "A#0": 29.13,
+        "Bb0": 29.13,
+        "B0": 30.86,
+        "C1": 32.7,
+        "C#1": 34.64,
+        "Db1": 34.64,
+        "D1": 36.7,
+        "D#1": 38.88,
+        "Eb1": 38.88,
+        "E1": 41.2,
+        "F1": 43.64,
+        "F#1": 46.24,
+        "Gb1": 46.24,
+        "G1": 49.0,
+        "G#1": 51.9,
+        "Ab1": 51.9,
+        "A1": 55.0,
+        "A#1": 58.26,
+        "Bb1": 58.26,
+        "B1": 61.72,
+        "C2": 65.4,
+        "C#2": 69.28,
+        "Db2": 69.28,
+        "D2": 73.4,
+        "D#2": 77.76,
+        "Eb2": 77.76,
+        "E2": 82.4,
+        "F2": 87.28,
+        "F#2": 92.48,
+        "Gb2": 92.48,
+        "G2": 98.0,
+        "G#2": 103.8,
+        "Ab2": 103.8,
+        "A2": 110.0,
+        "A#2": 116.52,
+        "Bb2": 116.52,
+        "B2": 123.44,
+        "C3": 130.8,
+        "C#3": 138.56,
+        "Db3": 138.56,
+        "D3": 146.8,
+        "D#3": 155.52,
+        "Eb3": 155.52,
+        "E3": 164.8,
+        "F3": 174.56,
+        "F#3": 184.96,
+        "Gb3": 184.96,
+        "G3": 196.0,
+        "G#3": 207.6,
+        "Ab3": 207.6,
+        "A3": 220.0,
+        "A#3": 233.04,
+        "Bb3": 233.04,
+        "B3": 246.88,
+        "C4": 261.6,
+        "C#4": 277.12,
+        "Db4": 277.12,
+        "D4": 293.6,
+        "D#4": 311.04,
+        "Eb4": 311.04,
+        "E4": 329.6,
+        "F4": 349.12,
+        "F#4": 369.92,
+        "Gb4": 369.92,
+        "G4": 392.0,
+        "G#4": 415.2,
+        "Ab4": 415.2,
+        "A4": 440.0,
+        "A#4": 466.08,
+        "Bb4": 466.08,
+        "B4": 493.76,
+        "C5": 523.2,
+        "C#5": 554.24,
+        "Db5": 554.24,
+        "D5": 587.2,
+        "D#5": 622.08,
+        "Eb5": 622.08,
+        "E5": 659.2,
+        "F5": 698.24,
+        "F#5": 739.84,
+        "Gb5": 739.84,
+        "G5": 784.0,
+        "G#5": 830.4,
+        "Ab5": 830.4,
+        "A5": 880.0,
+        "A#5": 932.16,
+        "Bb5": 932.16,
+        "B5": 987.52,
+        "C6": 1046.4,
+        "C#6": 1108.48,
+        "Db6": 1108.48,
+        "D6": 1174.4,
+        "D#6": 1244.16,
+        "Eb6": 1244.16,
+        "E6": 1318.4,
+        "F6": 1396.48,
+        "F#6": 1479.68,
+        "Gb6": 1479.68,
+        "G6": 1568.0,
+        "G#6": 1660.8,
+        "Ab6": 1660.8,
+        "A6": 1760.0,
+        "A#6": 1864.32,
+        "Bb6": 1864.32,
+        "B6": 1975.04,
+        "C7": 2092.8,
+        "C#7": 2216.96,
+        "Db7": 2216.96,
+        "D7": 2348.8,
+        "D#7": 2488.32,
+        "Eb7": 2488.32,
+        "E7": 2636.8,
+        "F7": 2792.96,
+        "F#7": 2959.36,
+        "Gb7": 2959.36,
+        "G7": 3136.0,
+        "G#7": 3321.6,
+        "Ab7": 3321.6,
+        "A7": 3520.0,
+        "A#7": 3728.64,
+        "Bb7": 3728.64,
+        "B7": 3950.08,
+        "C8": 4185.6,
+        "C#8": 4433.92,
+        "Db8": 4433.92,
+        "D8": 4697.6,
+        "D#8": 4976.64,
+        "Eb8": 4976.64,
+        "E8": 5273.6,
+        "F8": 5585.92,
+        "F#8": 5918.72,
+        "Gb8": 5918.72,
+        "G8": 6272.0,
+        "G#8": 6643.2,
+        "Ab8": 6643.2,
+        "A8": 7040.0,
+        "A#8": 7457.28,
+        "Bb8": 7457.28,
+        "B8": 7900.16,
+    }
 
-    def __str__(self):
-        return self.pitch + " " + str(self.octave) + " " + str(self.duration)
+    def __init__(self, pitch_name="A4", num_beats=1/8):
+        self.set_note_freq(pitch_name)
+        self.set_note_length(self, num_beats)
+        self.set_data_samples(self, [])
+
+    def set_note_freq(self, freq):
+        self.fundamental_freq = freq
+
+    def set_note_length(self, length):
+        self.num_beats = length
+
+    def set_data_samples(self, data):
+        self.data_samples = data
 
 
 class Chord:
 
-    def __init__(self):
-        self.event = []
-        self.current = 0
-        self.size = 0
+    def __init__(self) -> None:
+        self.chord_data_samples = []
 
-    def make_note_in_chord(self, pitch, octave, duration):
-        """_summary_
-
-        Args:
-            pitch (_type_): _description_
-            octave (_type_): _description_
-            duration (_type_): _description_
-        """
-        new_note = Note(pitch, octave, duration)
-        self.event.append(new_note)
-        self.size += 1
-
-    def __str__(self):
-        notes = []
-
-        for i in self.event:
-            notes.append(str(i))
-
-        notes = ", ".join(notes)
-
-        return str("CHORD " + notes)
-
-    def __iter__(self):
-        return self
-
-    def __next__(self):  # Python 2: def next(self)
-        self.current += 1
-        if self.current <= self.size:
-            return self.event[self.current-1]
-
-        raise StopIteration
-
-
-class Staff:
-
-    def __init__(self):
-        self.notes = []
-        self.current = 0
-        self.size = 0
-
-    def add_event(self, new_event):
-        """_summary_
-
-        Args:
-            new_event (_type_): _description_
-        """
-        self.notes.append(new_event)
-        self.size += 1
-
-    def add_note(self, new_note):
-        """_summary_
-
-        Args:
-            new_note (_type_): _description_
-        """
-        self.notes.append(new_note)
-        self.size += 1
-
-    def add_chord(self, new_chord):
-        """_summary_
-
-        Args:
-            new_chord (_type_): _description_
-        """
-        check(new_chord, exp=[Chord])
-        self.notes.append(new_chord)
-        self.size += 1
-
-    def __str__(self):
-        events = []
-
-        for i in self.notes:
-            events.append(str(i))
-
-        events = "|".join(events)
-
-        return events
-
-    def __iter__(self):
-        return self
-
-    def __next__(self):  # Python 2: def next(self)
-        self.current += 1
-        if self.current < self.size:
-            return self.notes[self.current-1]
-        raise StopIteration
+    def add_note_to_chord(self, pitch_name="A4", num_beats=1/8):
+        new_note = Note(self, pitch_name, num_beats)
+        self.chord_data_samples.append(new_note)
 
 
 class Score:
-    """_summary_
-    """
-    key_signatures = {
-        "0 major": ("C", 0, 0, "major"),
-        "1s major": ("G", 1, 0, "major"),
-        "2s major": ("D", 2, 0, "major"),
-        "3s major": ("A", 3, 0, "major"),
-        "4s major": ("E", 4, 0, "major"),
-        "5s major": ("B", 5, 0, "major"),
-        "6s major": ("F#", 6, 0, "major"),
-        "5f major": ("Db", 0, 5, "major"),
-        "4f major": ("Ab", 0, 4, "major"),
-        "3f major": ("Eb", 0, 3, "major"),
-        "2f major": ("Bb", 0, 2, "major"),
-        "1f major": ("F", 0, 1, "major"),
-        "0 minor": ("A", 0, 0, "minor"),
-        "1s minor": ("E", 1, 0, "minor"),
-        "2s minor": ("B", 2, 0, "minor"),
-        "3s minor": ("F#", 3, 0, "minor"),
-        "4s minor": ("C#", 4, 0, "minor"),
-        "5s minor": ("G#", 5, 0, "minor"),
-        "6s minor": ("D#", 6, 0, "minor"),
-        "5f minor": ("Bb", 0, 5, "minor"),
-        "4f minor": ("F", 0, 4, "minor"),
-        "3f minor": ("C", 0, 3, "minor"),
-        "2f minor": ("G", 0, 2, "minor"),
-        "1f minor": ("D", 0, 1, "minor")
-    }
 
-    def __init__(self):
-        self.title = "Title"
-        self.composer = "Composer"
+    score_count = 0
 
-        self.key = ("C", 0, 0, "major")
-        self.tempo = (112, "Moderato")
-        self.time_sig = (4, 4)
+    def __init__(self) -> None:
+        self.set_title("Score #" + str(Score.score_count))
+        self.set_composer("Composer")
+        Score.score_count += 1
+        self.staves = []
 
-        self.staffs: Staff = []
-        self.current = 0
-        self.size = 0
-        self.initialized = False
+    def add_note_to_staff(self, staff_num=0, pitch_name="A4", num_beats=1/8):
+        new_note = Note(self, pitch_name, num_beats)
+        self.staves[staff_num].append(new_note.data_samples)
 
-    def add_staff(self, new_staff: Staff):
-        """Add a staff object to the score."""
-        check(new_staff, exp=[Staff])
-        self.staffs.append(new_staff)
-        self.size += 1
+    def add_chord_to_staff(self, staff_num=0, chord=Chord()):
+        self.staves[staff_num].append(chord.chord_data_samples)
 
-    def disp(self):
-        """_summary_
-        """
-        print(self.title + " by " + self.composer + "\n" + str(self.key[0]) + " " + str(self.key[3]) +
-              " | Time Signature: " + str(self.time_sig[0]) + "/" + str(self.time_sig[1]) + "\nTempo " + str(self.tempo[0]) + " BPM\n")
+    def set_title(self, title):
+        self.title = title
 
-    def __str__(self):
-
-        string = self.title + " by " + self.composer + "\n\n"
-
-        for i, staff in enumerate(self.staffs):
-            string += "Staff " + str(i+1) + ": " + str(staff) + "\n\n"
-
-        return string
-
-    def __iter__(self):
-        return self
-
-    def __next__(self):  # Python 2: def next(self)
-        self.current += 1
-        if self.current < self.size:
-
-            return self.staffs[self.current-1]
-        raise StopIteration
+    def set_composer(self, name):
+        self.composer = name
