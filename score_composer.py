@@ -1,4 +1,7 @@
 class Note:
+    """
+    Lowest level that can be added to a Score(object)
+    """
 
     pitches = {
         "C0": 16.35,
@@ -8,6 +11,8 @@ class Note:
         "D#0": 19.44,
         "Eb0": 19.44,
         "E0": 20.6,
+        "E#0": 20.6,
+        "Fb0": 21.82,
         "F0": 21.82,
         "F#0": 23.12,
         "Gb0": 23.12,
@@ -18,6 +23,8 @@ class Note:
         "A#0": 29.13,
         "Bb0": 29.13,
         "B0": 30.86,
+        "B#0": 32.7,
+        "Cb0": 30.86,
         "C1": 32.7,
         "C#1": 34.64,
         "Db1": 34.64,
@@ -25,6 +32,8 @@ class Note:
         "D#1": 38.88,
         "Eb1": 38.88,
         "E1": 41.2,
+        "E#1": 41.2,
+        "Fb1": 43.64,
         "F1": 43.64,
         "F#1": 46.24,
         "Gb1": 46.24,
@@ -35,6 +44,8 @@ class Note:
         "A#1": 58.26,
         "Bb1": 58.26,
         "B1": 61.72,
+        "B#1": 65.4,
+        "Cb1": 61.72,
         "C2": 65.4,
         "C#2": 69.28,
         "Db2": 69.28,
@@ -42,6 +53,8 @@ class Note:
         "D#2": 77.76,
         "Eb2": 77.76,
         "E2": 82.4,
+        "E#2": 82.4,
+        "Fb2": 87.28,
         "F2": 87.28,
         "F#2": 92.48,
         "Gb2": 92.48,
@@ -52,6 +65,8 @@ class Note:
         "A#2": 116.52,
         "Bb2": 116.52,
         "B2": 123.44,
+        "B#2": 130.8,
+        "Cb2": 123.44,
         "C3": 130.8,
         "C#3": 138.56,
         "Db3": 138.56,
@@ -59,6 +74,8 @@ class Note:
         "D#3": 155.52,
         "Eb3": 155.52,
         "E3": 164.8,
+        "E#3": 164.8,
+        "Fb3": 174.56,
         "F3": 174.56,
         "F#3": 184.96,
         "Gb3": 184.96,
@@ -69,6 +86,8 @@ class Note:
         "A#3": 233.04,
         "Bb3": 233.04,
         "B3": 246.88,
+        "B#3": 261.6,
+        "Cb3": 246.88,
         "C4": 261.6,
         "C#4": 277.12,
         "Db4": 277.12,
@@ -76,6 +95,8 @@ class Note:
         "D#4": 311.04,
         "Eb4": 311.04,
         "E4": 329.6,
+        "E#4": 329.6,
+        "Fb4": 349.12,
         "F4": 349.12,
         "F#4": 369.92,
         "Gb4": 369.92,
@@ -86,6 +107,8 @@ class Note:
         "A#4": 466.08,
         "Bb4": 466.08,
         "B4": 493.76,
+        "B#4": 523.2,
+        "Cb4": 493.76,
         "C5": 523.2,
         "C#5": 554.24,
         "Db5": 554.24,
@@ -93,6 +116,8 @@ class Note:
         "D#5": 622.08,
         "Eb5": 622.08,
         "E5": 659.2,
+        "E#5": 659.2,
+        "Fb5": 698.24,
         "F5": 698.24,
         "F#5": 739.84,
         "Gb5": 739.84,
@@ -103,6 +128,8 @@ class Note:
         "A#5": 932.16,
         "Bb5": 932.16,
         "B5": 987.52,
+        "B#5": 1046.4,
+        "Cb5": 987.52,
         "C6": 1046.4,
         "C#6": 1108.48,
         "Db6": 1108.48,
@@ -110,6 +137,8 @@ class Note:
         "D#6": 1244.16,
         "Eb6": 1244.16,
         "E6": 1318.4,
+        "E#6": 1318.4,
+        "Fb6": 1396.48,
         "F6": 1396.48,
         "F#6": 1479.68,
         "Gb6": 1479.68,
@@ -120,6 +149,8 @@ class Note:
         "A#6": 1864.32,
         "Bb6": 1864.32,
         "B6": 1975.04,
+        "B#6": 2092.8,
+        "Cb6": 1975.04,
         "C7": 2092.8,
         "C#7": 2216.96,
         "Db7": 2216.96,
@@ -127,6 +158,8 @@ class Note:
         "D#7": 2488.32,
         "Eb7": 2488.32,
         "E7": 2636.8,
+        "E#7": 2636.8,
+        "Fb7": 2792.96,
         "F7": 2792.96,
         "F#7": 2959.36,
         "Gb7": 2959.36,
@@ -137,6 +170,8 @@ class Note:
         "A#7": 3728.64,
         "Bb7": 3728.64,
         "B7": 3950.08,
+        "B#7": 4185.6,
+        "Cb7": 3950.08,
         "C8": 4185.6,
         "C#8": 4433.92,
         "Db8": 4433.92,
@@ -144,6 +179,8 @@ class Note:
         "D#8": 4976.64,
         "Eb8": 4976.64,
         "E8": 5273.6,
+        "E#8": 5273.6,
+        "Fb8": 5585.92,
         "F8": 5585.92,
         "F#8": 5918.72,
         "Gb8": 5918.72,
@@ -154,52 +191,206 @@ class Note:
         "A#8": 7457.28,
         "Bb8": 7457.28,
         "B8": 7900.16,
+        "B#8": 8371.2,
+        "Cb8": 7900.16,
     }
 
     def __init__(self, pitch_name="A4", num_beats=1/8):
+        """Creates a Note(object), the lowest level of a Score(object)
+
+        Args:
+            pitch_name (str, optional): Letter name of note and the number octave. Defaults to "A4".
+            num_beats (float, optional): The number of beats the note gets. Defaults to 1/8.
+        """
         self.set_note_freq(pitch_name)
-        self.set_note_length(self, num_beats)
-        self.set_data_samples(self, [])
+        self.set_note_length(num_beats)
+        self.set_data_samples([])
 
-    def set_note_freq(self, freq):
-        self.fundamental_freq = freq
+    def set_note_freq(self, freq: str):
+        """
+        Takes a note name (str) and gets the  fundamental frequency (float) in Hertz
 
-    def set_note_length(self, length):
+        Args:
+            freq (str): letter of the note name
+
+        Example:
+            Note name: A4
+            Fundamental frequency: 440.0
+        """
+        self.fundamental_freq = Note.pitches[freq]
+        self.note_name = freq
+
+    def set_note_length(self, length: float):
+        """
+        Takes the number of beats (float) assigned to the note 
+
+        Args:
+            length (float): number of beats the note gets
+        """
         self.num_beats = length
 
     def set_data_samples(self, data):
+        """_summary_
+
+        Args:
+            data (_type_): _description_
+        """
         self.data_samples = data
 
 
 class Chord:
+    """
+    A group of Note(objects) that are to be played simultaneously
+    """
 
     def __init__(self) -> None:
+        """_summary_
+        """
         self.chord_data_samples = []
 
     def add_note_to_chord(self, pitch_name="A4", num_beats=1/8):
-        new_note = Note(self, pitch_name, num_beats)
+        """
+        Creates a new Note(object) and adds it to the Chord(object) the function is called from
+
+        Args:
+            pitch_name (str, optional): Letter name of note and the number octave. Defaults to "A4".
+            num_beats (float, optional): The number of beats the note gets. Defaults to 1/8.
+        """
+        new_note = Note(pitch_name, num_beats)
         self.chord_data_samples.append(new_note)
 
 
 class Score:
+    """_summary_
+    """
 
-    score_count = 0
+    _score_count = 0
+
+    _sharp_order = ["F", "C", "G", "D", "A", "E", "B"]
+    _flat_order = ["B", "E", "A", "D", "G", "C", "F"]
+
+    _major_sharp_key_order = ["G", "D", "A", "E", "B", "F#", "C#"]
+    _major_flat_key_order = ["F", "Bb", "Eb", "Ab", "Db", "Gb", "Cb"]
+
+    _minor_sharp_key_order = ["Em", "Bm", "F#m", "C#m", "G#m", "D#m", "A#m"]
+    _minor_flat_key_order = ["Dm", "Gm", "Cm", "Fm", "Bbm", "Ebm", "Abm"]
 
     def __init__(self) -> None:
-        self.set_title("Score #" + str(Score.score_count))
+        """_summary_
+        """
+        self.set_title("Score #" + str(self._score_count))
         self.set_composer("Composer")
-        Score.score_count += 1
+        self._score_count += 1
         self.staves = []
+        self.score_signal = []
+        self.initiated = False
+        self.set_key("C")
+        self.set_time_sig("4", "4")
 
-    def add_note_to_staff(self, staff_num=0, pitch_name="A4", num_beats=1/8):
-        new_note = Note(self, pitch_name, num_beats)
-        self.staves[staff_num].append(new_note.data_samples)
+    def set_title(self, title: str):
+        """_summary_
 
-    def add_chord_to_staff(self, staff_num=0, chord=Chord()):
-        self.staves[staff_num].append(chord.chord_data_samples)
-
-    def set_title(self, title):
+        Args:
+            title (_type_): _description_
+        """
         self.title = title
 
     def set_composer(self, name):
+        """_summary_
+
+        Args:
+            name (_type_): _description_
+        """
         self.composer = name
+
+    def set_key(self, key: str):
+        """_summary_
+
+        Args:
+            key (str): _description_
+        """
+        if key == "C":
+            self.key_accidentals = []
+        elif "m" in key:
+            if "b" in key or key in ["Dm", "Gm", "Cm", "Fm"]:
+                num_flats = Score._minor_flat_key_order.index(key)
+                self.key_accidentals = Score._flat_order[:num_flats+1]
+            elif "#" in key or key in ["Em", "Bm"]:
+                num_sharps = Score._minor_sharp_key_order.index(key)
+                self.key_accidentals = Score._sharp_order[:num_sharps+1]
+        else:
+            if "b" in key or key == "F":
+                num_flats = Score._major_flat_key_order.index(key)
+                self.key_accidentals = Score._flat_order[:num_flats+1]
+            elif "#" in key or key in ["G", "D", "A", "E"]:
+                num_sharps = Score._major_sharp_key_order.index(key)
+                self.key_accidentals = Score._sharp_order[:num_sharps+1]
+
+    def set_time_sig(self, beats_per_measure: str, beats_per_note: str):
+        """_summary_
+
+        Args:
+            beats_per_measure (str): _description_
+            beats_per_note (str): _description_
+        """
+        self.time_sig = (int(beats_per_measure), 1/int(beats_per_note))
+
+    def get_work_info(self):
+        """_summary_
+
+        Returns:
+            _type_: _description_
+        """
+        return self.title + " by " + self.composer
+
+    def get_key(self):
+        """_summary_
+
+        Returns:
+            _type_: _description_
+        """
+        string = ""
+
+        for accid in self.key_accidentals:
+            string += str(accid) + " "
+
+        return string
+
+    def get_time_signature(self):
+        """_summary_
+
+        Returns:
+            _type_: _description_
+        """
+        return str(self.time_sig[0]) + "/" + str(int(1/self.time_sig[1]))
+
+    def get_score_info(self):
+        info = Score.get_work_info(
+            self) + "\n" + Score.get_key(self) + " " + Score.get_time_signature(self)
+        return info
+
+    def add_staff_to_score(self):
+        """_summary_
+        """
+        self.staves.append([])
+
+    def add_note_to_staff(self, staff_num=0, pitch_name="A4", num_beats=1/8):
+        """_summary_
+
+        Args:
+            staff_num (int, optional): _description_. Defaults to 0.
+            pitch_name (str, optional): _description_. Defaults to "A4".
+            num_beats (_type_, optional): _description_. Defaults to 1/8.
+        """
+        new_note = Note(pitch_name, num_beats)
+        self.staves[staff_num].append(new_note)
+
+    def add_chord_to_staff(self, chord: Chord, staff_num=0, ):
+        """_summary_
+
+        Args:
+            staff_num (int, optional): _description_. Defaults to 0.
+            chord (_type_, optional): _description_.
+        """
+
+        self.staves[staff_num].append(chord)

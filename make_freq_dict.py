@@ -1,4 +1,5 @@
 import numpy as np
+
 pitches = [
     16.35,
     17.32,
@@ -7,6 +8,8 @@ pitches = [
     19.44,
     19.44,
     20.6,
+    20.6,
+    21.82,
     21.82,
     23.12,
     23.12,
@@ -17,17 +20,21 @@ pitches = [
     29.13,
     29.13,
     30.86,
+    32.7,
+    30.86
 ]
-names = ["C", "C#", "Db", "D", "D#", "Eb", "E", "F",
-         "F#", "Gb", "G", "G#", "Ab", "A", "A#", "Bb", "B"]
 
-with open("pitches.txt", "w") as f:
+
+names = ["C", "C#", "Db", "D", "D#", "Eb", "E", "E#", "Fb", "F",
+         "F#", "Gb", "G", "G#", "Ab", "A", "A#", "Bb", "B", "B#", "Cb"]
+
+with open("pitches.txt", "w", encoding="utf-8") as f:
 
     f.write("pitches = {\n")
     for octave in range(9):
-        for i in range(len(pitches)):
-            f.write('"' + names[i] + str(octave) +
-                    '": ' + str(np.round(pitches[i]*2**(octave), 2)) + ",\n")
+        for num, i in enumerate(pitches):
+            f.write('"' + names[num] + str(octave) +
+                    '": ' + str(np.round(i*2**(octave), 2)) + ",\n")
     f.write('}')
 
 f.close()

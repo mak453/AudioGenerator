@@ -4,25 +4,9 @@ import synthesizer as synth
 import wave as wv
 
 
-class song:
-
-    sample_rate = 0
-    bit_depth = 0
-    channels = 0
-
-    def __init__(self):
-        self.data = []
-
-    def create_file(score):
-        data = synth.synthesize_score(score, sample_rate, bit_depth)
-
-        with wv.open(args.wav_filename, 'wb') as file:
-            file.setnchannels(args.channels)
-            file.setframerate(args.sample_rate)
-            file.setsampwidth(int(args.bit_depth/8))
-
-
 def display_information():
+    """_summary_
+    """
     if args.music_xml:
         print("MEI v" + str(version))
         print("MusicXML v")
@@ -54,8 +38,8 @@ if __name__ == "__main__":
     scores, version = mei_parser.disect_mei(args.mei_file)
 
     for score in scores:
-        print(score)
-        
+        print(score.get_score_info())
+
     # one = song()
     # one.sample_rate = args.sample_rate
     # one.bit_depth = args.bit_depth
