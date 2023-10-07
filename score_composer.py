@@ -4,6 +4,8 @@ class Note:
     """
 
     pitches = {
+        "rest": 0,
+        "mRest": 0,
         "C0": 16.35,
         "C#0": 17.32,
         "Db0": 17.32,
@@ -237,6 +239,9 @@ class Note:
         """
         self.data_samples = data
 
+    def __str__(self) -> str:
+        return self.note_name + "(" + str(self.num_beats) + ")"
+
 
 class Chord:
     """
@@ -246,7 +251,14 @@ class Chord:
     def __init__(self) -> None:
         """_summary_
         """
-        self.chord_data_samples = []
+        self.chord_notes = []
+
+    def __str__(self) -> str:
+        all_notes = []
+        for note in self.chord_notes:
+            all_notes.append(str(note))
+
+        return " ".join(all_notes)
 
     def add_note_to_chord(self, pitch_name="A4", num_beats=1/8):
         """
@@ -257,7 +269,7 @@ class Chord:
             num_beats (float, optional): The number of beats the note gets. Defaults to 1/8.
         """
         new_note = Note(pitch_name, num_beats)
-        self.chord_data_samples.append(new_note)
+        self.chord_notes.append(new_note)
 
 
 class Score:
@@ -278,14 +290,19 @@ class Score:
     def __init__(self) -> None:
         """_summary_
         """
-        self.set_title("Score #" + str(self._score_count))
-        self.set_composer("Composer")
+        self.set_title("default")
+        self.set_composer("default")
         self._score_count += 1
         self.staves = []
-        self.score_signal = []
-        self.initiated = False
         self.set_key("C")
         self.set_time_sig("4", "4")
+
+    def __str__(self) -> str:
+        all_staves = []
+        for staff in self.staves:
+            all_staves.append(str(staff))
+
+        return "\n".join(all_staves)
 
     def set_title(self, title: str):
         """_summary_
@@ -316,15 +333,15 @@ class Score:
                 num_flats = Score._minor_flat_key_order.index(key)
                 self.key_accidentals = Score._flat_order[:num_flats+1]
             elif "#" in key or key in ["Em", "Bm"]:
-                num_sharps = Score._minor_sharp_key_order.index(key)
+                self.num_sharps = Score._minor_sharp_key_order.index(key)
                 self.key_accidentals = Score._sharp_order[:num_sharps+1]
         else:
             if "b" in key or key == "F":
-                num_flats = Score._major_flat_key_order.index(key)
-                self.key_accidentals = Score._flat_order[:num_flats+1]
+                self.num_flats = Score._major_flat_key_order.index(key)
+                self.key_accidentals = Score._flat_order[:self.num_flats+1]
             elif "#" in key or key in ["G", "D", "A", "E"]:
-                num_sharps = Score._major_sharp_key_order.index(key)
-                self.key_accidentals = Score._sharp_order[:num_sharps+1]
+                self.num_sharps = Score._major_sharp_key_order.index(key)
+                self.key_accidentals = Score._sharp_order[:self.num_sharps+1]
 
     def set_time_sig(self, beats_per_measure: str, beats_per_note: str):
         """_summary_
@@ -341,7 +358,7 @@ class Score:
         Returns:
             _type_: _description_
         """
-        return self.title + " by " + self.composer
+        return str(self.title + " by " + self.composer)
 
     def get_key(self):
         """_summary_
@@ -365,16 +382,50 @@ class Score:
         return str(self.time_sig[0]) + "/" + str(int(1/self.time_sig[1]))
 
     def get_score_info(self):
+        """_summary_
+
+        Returns:
+            _type_: _description_
+        """
         info = Score.get_work_info(
             self) + "\n" + Score.get_key(self) + " " + Score.get_time_signature(self)
         return info
 
+    def get_notes_in_staff(self, staff_num):
+        """_summary_
+
+        Args:
+            staff_num (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
+        all_notes = []
+        for note in self.staves[staff_num]:
+            all_notes.append(str(note))
+
+        return " | ".join(all_notes)
+
     def add_staff_to_score(self):
         """_summary_
         """
-        self.staves.append([])
+        new_staff = Staff()
+        self.staves.append(new_staff)
 
-    def add_note_to_staff(self, staff_num=0, pitch_name="A4", num_beats=1/8):
+
+class Staff:
+    """_summary_
+    """
+
+    def __init__(self) -> None:
+        self.layers = [[]]
+
+    def add_layer_to_staff(self):
+        """_summary_
+        """
+        self.layers.append([])
+
+    def add_note_to_layer(self, pitch_name="A4", num_beats=1/8, layer_num=0):
         """_summary_
 
         Args:
@@ -382,15 +433,25 @@ class Score:
             pitch_name (str, optional): _description_. Defaults to "A4".
             num_beats (_type_, optional): _description_. Defaults to 1/8.
         """
-        new_note = Note(pitch_name, num_beats)
-        self.staves[staff_num].append(new_note)
+        curr_layer = self.layers[layer_num]
+        curr_layer.append(Note(pitch_name, num_beats))
 
-    def add_chord_to_staff(self, chord: Chord, staff_num=0, ):
+    def add_chord_to_layer(self, chord: Chord, layer_num=0):
         """_summary_
 
         Args:
             staff_num (int, optional): _description_. Defaults to 0.
             chord (_type_, optional): _description_.
         """
+        curr_layer = self.layers[layer_num]
+        curr_layer.append(chord)
 
-        self.staves[staff_num].append(chord)
+    def __str__(self) -> str:
+        all_layers = []
+        for layer in self.layers:
+            layer_notes = []
+            for note in layer:
+                layer_notes.append(str(note))
+            all_layers.append(str(layer_notes))
+
+        return "&".join(all_layers)
