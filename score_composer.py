@@ -207,6 +207,7 @@ class Note:
         self.set_note_freq(pitch_name)
         self.set_note_length(num_beats)
         self.set_data_samples([])
+        self.measure = 0
 
     def set_note_freq(self, freq: str):
         """
@@ -229,7 +230,7 @@ class Note:
         Args:
             length (float): number of beats the note gets
         """
-        self.num_beats = length
+        self.note_length = length
 
     def set_data_samples(self, data):
         """_summary_
@@ -239,8 +240,11 @@ class Note:
         """
         self.data_samples = data
 
+    def set_measure(self, measure):
+        self.measure = measure
+
     def __str__(self) -> str:
-        return self.note_name + "(" + str(self.num_beats) + ")"
+        return "M:" + str(self.measure) + " " + self.note_name + "(1/" + str(self.note_length) + ")"
 
 
 class Chord:
@@ -252,6 +256,8 @@ class Chord:
         """_summary_
         """
         self.chord_notes = []
+        self.data_samples = []
+        self.measure = 0
 
     def __str__(self) -> str:
         all_notes = []
@@ -260,7 +266,7 @@ class Chord:
 
         return " ".join(all_notes)
 
-    def add_note_to_chord(self, pitch_name="A4", num_beats=1/8):
+    def add_note_to_chord(self, note: Note):
         """
         Creates a new Note(object) and adds it to the Chord(object) the function is called from
 
@@ -268,15 +274,52 @@ class Chord:
             pitch_name (str, optional): Letter name of note and the number octave. Defaults to "A4".
             num_beats (float, optional): The number of beats the note gets. Defaults to 1/8.
         """
-        new_note = Note(pitch_name, num_beats)
-        self.chord_notes.append(new_note)
+        self.chord_notes.append(note)
+
+    def set_measure(self, measure):
+        for note in self.chord_notes:
+            note.set_measure(measure)
+
+
+class Staff:
+    """_summary_
+    """
+
+    def __init__(self) -> None:
+        self.layers = [[]]
+        self.sample_data = []
+
+    def add_layer_to_staff(self):
+        """_summary_
+        """
+        self.layers.append([])
+
+    def add_event_to_layer(self, event, layer_num=0, measure=0):
+        """_summary_
+
+        Args:
+            event (_type_): _description_
+            layer_num (int, optional): _description_. Defaults to 0.
+        """
+        curr_layer = self.layers[layer_num]
+        event.set_measure(measure)
+        curr_layer.append(event)
+
+    def __str__(self) -> str:
+        all_layers = []
+
+        for layer in self.layers:
+            layer_notes = []
+            for note in layer:
+                layer_notes.append(str(note))
+            all_layers.append(str(layer_notes))
+
+        return "\n&\n".join(all_layers)
 
 
 class Score:
     """_summary_
     """
-
-    _score_count = 0
 
     _sharp_order = ["F", "C", "G", "D", "A", "E", "B"]
     _flat_order = ["B", "E", "A", "D", "G", "C", "F"]
@@ -287,22 +330,27 @@ class Score:
     _minor_sharp_key_order = ["Em", "Bm", "F#m", "C#m", "G#m", "D#m", "A#m"]
     _minor_flat_key_order = ["Dm", "Gm", "Cm", "Fm", "Bbm", "Ebm", "Abm"]
 
+    sample_rate = 0
+    bit_depth = 0
+
     def __init__(self) -> None:
         """_summary_
         """
         self.set_title("default")
         self.set_composer("default")
-        self._score_count += 1
-        self.staves = []
+        self.staves: list[Staff] = []
+        self.data_samples = []
         self.set_key("C")
         self.set_time_sig("4", "4")
+        self.set_tempo(120.0)
+        self.num_measures = 0
 
     def __str__(self) -> str:
         all_staves = []
         for staff in self.staves:
             all_staves.append(str(staff))
 
-        return "\n".join(all_staves)
+        return "\n\n".join(all_staves)
 
     def set_title(self, title: str):
         """_summary_
@@ -333,15 +381,15 @@ class Score:
                 num_flats = Score._minor_flat_key_order.index(key)
                 self.key_accidentals = Score._flat_order[:num_flats+1]
             elif "#" in key or key in ["Em", "Bm"]:
-                self.num_sharps = Score._minor_sharp_key_order.index(key)
+                num_sharps = Score._minor_sharp_key_order.index(key)
                 self.key_accidentals = Score._sharp_order[:num_sharps+1]
         else:
             if "b" in key or key == "F":
-                self.num_flats = Score._major_flat_key_order.index(key)
-                self.key_accidentals = Score._flat_order[:self.num_flats+1]
+                num_flats = Score._major_flat_key_order.index(key)
+                self.key_accidentals = Score._flat_order[:num_flats+1]
             elif "#" in key or key in ["G", "D", "A", "E"]:
-                self.num_sharps = Score._major_sharp_key_order.index(key)
-                self.key_accidentals = Score._sharp_order[:self.num_sharps+1]
+                num_sharps = Score._major_sharp_key_order.index(key)
+                self.key_accidentals = Score._sharp_order[:num_sharps+1]
 
     def set_time_sig(self, beats_per_measure: str, beats_per_note: str):
         """_summary_
@@ -351,6 +399,15 @@ class Score:
             beats_per_note (str): _description_
         """
         self.time_sig = (int(beats_per_measure), 1/int(beats_per_note))
+
+    def set_tempo(self, tempo):
+        """_summary_
+
+        Args:
+            tempo (_type_): _description_
+        """
+        if type(tempo) == float:
+            self.tempo = tempo
 
     def get_work_info(self):
         """_summary_
@@ -406,52 +463,19 @@ class Score:
 
         return " | ".join(all_notes)
 
+    def get_staff(self, staff_num: int):
+        """_summary_
+
+        Args:
+            staff_num (int): _description_
+
+        Returns:
+            _type_: _description_
+        """
+        return self.staves[staff_num]
+
     def add_staff_to_score(self):
         """_summary_
         """
         new_staff = Staff()
         self.staves.append(new_staff)
-
-
-class Staff:
-    """_summary_
-    """
-
-    def __init__(self) -> None:
-        self.layers = [[]]
-
-    def add_layer_to_staff(self):
-        """_summary_
-        """
-        self.layers.append([])
-
-    def add_note_to_layer(self, pitch_name="A4", num_beats=1/8, layer_num=0):
-        """_summary_
-
-        Args:
-            staff_num (int, optional): _description_. Defaults to 0.
-            pitch_name (str, optional): _description_. Defaults to "A4".
-            num_beats (_type_, optional): _description_. Defaults to 1/8.
-        """
-        curr_layer = self.layers[layer_num]
-        curr_layer.append(Note(pitch_name, num_beats))
-
-    def add_chord_to_layer(self, chord: Chord, layer_num=0):
-        """_summary_
-
-        Args:
-            staff_num (int, optional): _description_. Defaults to 0.
-            chord (_type_, optional): _description_.
-        """
-        curr_layer = self.layers[layer_num]
-        curr_layer.append(chord)
-
-    def __str__(self) -> str:
-        all_layers = []
-        for layer in self.layers:
-            layer_notes = []
-            for note in layer:
-                layer_notes.append(str(note))
-            all_layers.append(str(layer_notes))
-
-        return "&".join(all_layers)

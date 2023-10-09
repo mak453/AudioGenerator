@@ -1,7 +1,5 @@
 import argparse
 import mei_parser as mei_parser
-import synthesizer as synth
-import wave as wv
 
 
 def display_information():
@@ -35,7 +33,8 @@ if __name__ == "__main__":
 
     # print(args.mei_file)
 
-    scores, version = mei_parser.disect_mei(args.mei_file)
+    scores, version = mei_parser.disect_mei(
+        args.mei_file, args.sample_rate, args.bit_depth)
 
     # one = song()
     # one.sample_rate = args.sample_rate
