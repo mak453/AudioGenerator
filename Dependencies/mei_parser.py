@@ -1,8 +1,10 @@
+"""
+
+"""
 import xml.etree.ElementTree as et
 from xml.etree.ElementTree import Element
-from score_composer import Score, Chord, Staff, Note
-import numpy as np
-import synthesizer
+from Dependencies.score_composer import Score, Chord, Staff, Note
+import Dependencies.synthesizer as synthesizer
 
 ns = {'default': '{http://www.music-encoding.org/ns/mei}'}
 
@@ -24,12 +26,11 @@ def disect_mei(folder: list, sample_rate: int, bit_depth: int):
     Score.bit_depth = bit_depth
 
     for file in folder:
-        print(file)
-
         mei = et.parse(file)
         root = mei.getroot()
         version = root.attrib["meiversion"]
         new_score = Score()
+
         traverse(root, new_score)
         synthesizer.make_audio_file(new_score)
 
@@ -108,7 +109,7 @@ def note_event(note_elem: Element, score: Score):
     return str(pitch)
 
 
-def chord_event(chord_elem: Element, score: Score, curr_layer=0):
+def chord_event(chord_elem: Element, score: Score):
     """_summary_
 
     Args:
@@ -179,63 +180,63 @@ def traverse(root: Element, score: Score):
         elif found >= 4:
             break
 
-        for measure in root.iter(ns["default"] + "measure"):
-            if "n" in measure.attrib and int(measure.attrib["n"]) > curr_measure:
-                curr_measure += 1
-                score.num_measures += 1
-                for staff in measure.iter(ns["default"] + "staff"):
-                    if "n" in staff.attrib and int(staff.attrib["n"]) > len(score.staves):
-                        score.add_staff_to_score()
-                    if "n" in staff.attrib:
-                        curr_staff = score.get_staff(int(staff.attrib["n"])-1)
+    for measure in root.iter(ns["default"] + "measure"):
+        if "n" in measure.attrib and int(measure.attrib["n"]) > curr_measure:
+            curr_measure += 1
+            score.num_measures += 1
+            for staff in measure.iter(ns["default"] + "staff"):
+                if "n" in staff.attrib and int(staff.attrib["n"]) > len(score.staves):
+                    score.add_staff_to_score()
+                if "n" in staff.attrib:
+                    curr_staff = score.get_staff(int(staff.attrib["n"])-1)
 
-                        for layer in staff.iter(ns["default"] + "layer"):
-                            if "n" in layer.attrib and int(layer.attrib["n"]) > len(curr_staff.layers):
-                                curr_staff.add_layer_to_staff()
-                            if "n" in layer.attrib:
-                                curr_layer = int(layer.attrib["n"])-1
+                    for layer in staff.iter(ns["default"] + "layer"):
+                        if "n" in layer.attrib and int(layer.attrib["n"]) > len(curr_staff.layers):
+                            curr_staff.add_layer_to_staff()
+                        if "n" in layer.attrib:
+                            curr_layer = int(layer.attrib["n"])-1
 
-                            for event_elem in layer:
-                                event = event_elem.tag[SKIP:]
-                                if event == "beam":
-                                    beam_event(
-                                        event_elem, curr_staff, score, curr_measure, curr_layer)
-                                else:
-                                    if event == "note":
-                                        pitch = note_event(
-                                            event_elem, score)
-                                        if "dots" in event_elem.attrib:
-                                            duration = int(
-                                                event_elem.attrib["dur"]) + int(event_elem.attrib["dur"])/2
-                                        else:
-                                            duration = int(
-                                                event_elem.attrib["dur"])
-                                        new_event = Note(
-                                            pitch, duration)
-                                        synthesizer.make_fundamental(
-                                            score, new_event)
-                                    elif event == "chord":
-                                        new_event = chord_event(
-                                            event_elem, score, curr_layer)
-                                        synthesizer.make_chord(new_event)
-                                    elif event == "rest":
-                                        if "dots" in event_elem.attrib:
-                                            duration = int(
-                                                event_elem.attrib["dur"]) + int(event_elem.attrib["dur"])/2
-                                        else:
-                                            duration = int(
-                                                event_elem.attrib["dur"])
-                                        new_event = Note(
-                                            "rest", duration)
-                                        synthesizer.make_fundamental(
-                                            score, new_event)
-                                    elif event == "mRest":
-                                        new_event = Note(
-                                            "rest", score.time_sig[0])
-                                        synthesizer.make_fundamental(
-                                            score, new_event)
+                        for event_elem in layer:
+                            event = event_elem.tag[SKIP:]
+                            if event == "beam":
+                                beam_event(
+                                    event_elem, curr_staff, score, curr_measure, curr_layer)
+                            else:
+                                if event == "note":
+                                    pitch = note_event(
+                                        event_elem, score)
+                                    if "dots" in event_elem.attrib:
+                                        duration = int(
+                                            event_elem.attrib["dur"]) + int(event_elem.attrib["dur"])/2
+                                    else:
+                                        duration = int(
+                                            event_elem.attrib["dur"])
+                                    new_event = Note(
+                                        pitch, duration)
+                                    synthesizer.make_fundamental(
+                                        score, new_event)
+                                elif event == "chord":
+                                    new_event = chord_event(
+                                        event_elem, score)
+                                    synthesizer.make_chord(new_event)
+                                elif event == "rest":
+                                    if "dots" in event_elem.attrib:
+                                        duration = int(
+                                            event_elem.attrib["dur"]) + int(event_elem.attrib["dur"])/2
+                                    else:
+                                        duration = int(
+                                            event_elem.attrib["dur"])
+                                    new_event = Note(
+                                        "rest", duration)
+                                    synthesizer.make_fundamental(
+                                        score, new_event)
+                                elif event == "mRest":
+                                    new_event = Note(
+                                        "mRest", score.time_sig[0])
+                                    synthesizer.make_fundamental(
+                                        score, new_event)
 
-                                    curr_staff.add_event_to_layer(
-                                        new_event, curr_layer, curr_measure)
+                                curr_staff.add_event_to_layer(
+                                    new_event, curr_layer, curr_measure)
 
     return

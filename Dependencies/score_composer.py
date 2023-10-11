@@ -241,10 +241,15 @@ class Note:
         self.data_samples = data
 
     def set_measure(self, measure):
+        """_summary_
+
+        Args:
+            measure (_type_): _description_
+        """
         self.measure = measure
 
     def __str__(self) -> str:
-        return "M:" + str(self.measure) + " " + self.note_name + "(1/" + str(self.note_length) + ")"
+        return "M:" + str(self.measure) + " " + self.note_name + "<1/" + str(self.note_length) + ">[" + str(self.fundamental_freq)+"Hz]"
 
 
 class Chord:
@@ -261,10 +266,13 @@ class Chord:
 
     def __str__(self) -> str:
         all_notes = []
+        duration = ""
         for note in self.chord_notes:
-            all_notes.append(str(note))
+            string = note.note_name + "[" + str(note.fundamental_freq) + "]"
+            all_notes.append(string)
+            duration = note.note_length
 
-        return " ".join(all_notes)
+        return "M:" + str(self.measure) + " Chord(" + " ".join(all_notes) + ")" + "<1/" + str(duration) + ">"
 
     def add_note_to_chord(self, note: Note):
         """
@@ -277,8 +285,14 @@ class Chord:
         self.chord_notes.append(note)
 
     def set_measure(self, measure):
+        """_summary_
+
+        Args:
+            measure (_type_): _description_
+        """
         for note in self.chord_notes:
             note.set_measure(measure)
+        self.measure = measure
 
 
 class Staff:
@@ -314,7 +328,12 @@ class Staff:
                 layer_notes.append(str(note))
             all_layers.append(str(layer_notes))
 
-        return "\n&\n".join(all_layers)
+        string = ""
+        for num, layer in enumerate(all_layers):
+            string += "\n\n\tLayer " + str(num) + "\n"
+            string += "\t\t" + layer
+
+        return string
 
 
 class Score:
@@ -342,15 +361,15 @@ class Score:
         self.data_samples = []
         self.set_key("C")
         self.set_time_sig("4", "4")
-        self.set_tempo(120.0)
+        self.set_tempo(60.0)
         self.num_measures = 0
 
     def __str__(self) -> str:
-        all_staves = []
-        for staff in self.staves:
-            all_staves.append(str(staff))
+        string = ""
+        string += self.get_score_info() + "\n\n"
+        string += self.get_notes()
 
-        return "\n\n".join(all_staves)
+        return string
 
     def set_title(self, title: str):
         """_summary_
@@ -406,7 +425,7 @@ class Score:
         Args:
             tempo (_type_): _description_
         """
-        if type(tempo) == float:
+        if isinstance(tempo, float):
             self.tempo = tempo
 
     def get_work_info(self):
@@ -448,7 +467,7 @@ class Score:
             self) + "\n" + Score.get_key(self) + " " + Score.get_time_signature(self)
         return info
 
-    def get_notes_in_staff(self, staff_num):
+    def get_notes(self):
         """_summary_
 
         Args:
@@ -457,11 +476,11 @@ class Score:
         Returns:
             _type_: _description_
         """
-        all_notes = []
-        for note in self.staves[staff_num]:
-            all_notes.append(str(note))
+        staff_info = ""
+        for num, staff in enumerate(self.staves):
+            staff_info += "\n\nStaff " + str(num) + str(staff)
 
-        return " | ".join(all_notes)
+        return staff_info
 
     def get_staff(self, staff_num: int):
         """_summary_
