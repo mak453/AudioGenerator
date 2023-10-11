@@ -1,28 +1,12 @@
 import argparse
-import mei_parser as mei_parser
-import synthesizer as synth
-import wave as wv
-
-
-class song:
-
-    sample_rate = 0
-    bit_depth = 0
-    channels = 0
-
-    def __init__(self):
-        self.data = []
-
-    def create_file(score):
-        data = synth.synthesize_score(score, sample_rate, bit_depth)
-
-        with wv.open(args.wav_filename, 'wb') as file:
-            file.setnchannels(args.channels)
-            file.setframerate(args.sample_rate)
-            file.setsampwidth(int(args.bit_depth/8))
+import Dependencies.mei_parser as mei_parser
+import Helper_Files.demo as demo
+import Dependencies.synthesizer as synth
 
 
 def display_information():
+    """_summary_
+    """
     if args.music_xml:
         print("MEI v" + str(version))
         print("MusicXML v")
@@ -46,19 +30,33 @@ if __name__ == "__main__":
                         default=1, help='Number of channels')
     parser.add_argument('--music_xml', action='store_true',
                         help='Create MusicXML file from MEI file')
+    parser.add_argument('--demo', action='store_true',
+                        help='Demos current state of code')
 
     args = parser.parse_args()
 
     # print(args.mei_file)
 
-    scores, version = mei_parser.disect_mei(args.mei_file)
+    if args.demo:
+        string = "\n\nDEMO (Reading in 3 .mei files and displaying score info)\n"
+        string += "\tScore info: Title, Composer, Note Accidentals (Key), Time Signature\n"
+        string += "\tNote info divided by each staff, layer, and notes/chords with their fundamental frequencies"
+        string += "\n\tWhen a note is created the data samples for the fundamental freq are immediately created"
 
-    # print(scores)
-    # one = song()
-    # one.sample_rate = args.sample_rate
-    # one.bit_depth = args.bit_depth
-    # one.channels = args.channels
-    # one.create_file(score)
+        input(string)
+        scores, version = demo.disect_mei(
+            args.mei_file, args.sample_rate, args.bit_depth)
+        print()
+
+        string = "\n\nDEMO (Making C major scale audio file from .mei file)\n"
+        print("\n\n**********************************************************")
+        input(string)
+
+        synth.make_audio_file(scores[-1])
+
+    else:
+        scores, version = mei_parser.disect_mei(
+            args.mei_file, args.sample_rate, args.bit_depth)
 
     if args.music_xml:
         mei_parser.convert_to_music_xml()
