@@ -1,6 +1,6 @@
 class Note:
     """
-    Lowest level that can be added to a Score(object)
+    Lowest level structure that can be added to a Score (object)
     """
 
     pitches = {
@@ -198,7 +198,8 @@ class Note:
     }
 
     def __init__(self, pitch_name="A4", num_beats=1/8):
-        """Creates a Note(object), the lowest level of a Score(object)
+        """
+        Creates a Note (object), the lowest level structure of a Score (object)
 
         Args:
             pitch_name (str, optional): Letter name of note and the number octave. Defaults to "A4".
@@ -209,19 +210,19 @@ class Note:
         self.set_data_samples([])
         self.measure = 0
 
-    def set_note_freq(self, freq: str):
+    def set_note_freq(self, name: str):
         """
         Takes a note name (str) and gets the  fundamental frequency (float) in Hertz
 
         Args:
-            freq (str): letter of the note name
+            name (str): letter of the note name and the octave
 
         Example:
             Note name: A4
             Fundamental frequency: 440.0
         """
-        self.fundamental_freq = Note.pitches[freq]
-        self.note_name = freq
+        self.fundamental_freq = Note.pitches[name]
+        self.note_name = name
 
     def set_note_length(self, length: float):
         """
@@ -233,18 +234,20 @@ class Note:
         self.note_length = length
 
     def set_data_samples(self, data):
-        """_summary_
+        """
+        Fills the data array with the synthesized sample data
 
         Args:
-            data (_type_): _description_
+            data (array-like): data samples
         """
         self.data_samples = data
 
-    def set_measure(self, measure):
-        """_summary_
+    def set_measure(self, measure: int):
+        """
+        Sets what measure the Note (object) is assigned from
 
         Args:
-            measure (_type_): _description_
+            measure (int): the measure # of the piece. Starts at 1 
         """
         self.measure = measure
 
@@ -254,11 +257,12 @@ class Note:
 
 class Chord:
     """
-    A group of Note(objects) that are to be played simultaneously
+    A group of Note (objects) that are to be played simultaneously
     """
 
     def __init__(self) -> None:
-        """_summary_
+        """
+        Creates Chord (object)
         """
         self.chord_notes = []
         self.data_samples = []
@@ -276,19 +280,20 @@ class Chord:
 
     def add_note_to_chord(self, note: Note):
         """
-        Creates a new Note(object) and adds it to the Chord(object) the function is called from
+        Takes a Note (object) and adds to the Chord (object) called from
 
         Args:
-            pitch_name (str, optional): Letter name of note and the number octave. Defaults to "A4".
-            num_beats (float, optional): The number of beats the note gets. Defaults to 1/8.
+            note (Note): the Note (object) to be added to Chord (object)
         """
+
         self.chord_notes.append(note)
 
     def set_measure(self, measure):
-        """_summary_
+        """
+        Sets what measure the Chord (object) is assigned from
 
         Args:
-            measure (_type_): _description_
+            measure (int): the measure # of the piece. Starts at 1 
         """
         for note in self.chord_notes:
             note.set_measure(measure)
@@ -296,7 +301,8 @@ class Chord:
 
 
 class Staff:
-    """_summary_
+    """
+    Middle level structure which holds Notes (object) and Chords (object)
     """
 
     def __init__(self) -> None:
@@ -304,16 +310,19 @@ class Staff:
         self.sample_data = []
 
     def add_layer_to_staff(self):
-        """_summary_
+        """
+        Adds an empty list to the called Staff (object) array of piece layers
         """
         self.layers.append([])
 
     def add_event_to_layer(self, event, layer_num=0, measure=0):
-        """_summary_
+        """
+        Adds either Note (object) or Chord (object) as the next sequential event in the specified layer
 
         Args:
-            event (_type_): _description_
-            layer_num (int, optional): _description_. Defaults to 0.
+            event (Note) or (Chord): the Note (object) or Chord (object) to be added to the layer
+            layer_num (int, optional): the desired layer to be added to. Defaults to 0.
+            measure (int, optional): the measure # of the piece. Starts at 1. Defaults to 0.
         """
         curr_layer = self.layers[layer_num]
         event.set_measure(measure)
@@ -337,7 +346,8 @@ class Staff:
 
 
 class Score:
-    """_summary_
+    """
+    Highest level structure of a music piece
     """
 
     _sharp_order = ["F", "C", "G", "D", "A", "E", "B"]
@@ -355,13 +365,13 @@ class Score:
     def __init__(self) -> None:
         """_summary_
         """
-        self.set_title("default")
-        self.set_composer("default")
+        self.set_title()
+        self.set_composer()
         self.staves: list[Staff] = []
         self.data_samples = []
-        self.set_key("C")
-        self.set_time_sig("4", "4")
-        self.set_tempo(60.0)
+        self.set_key()
+        self.set_time_sig()
+        self.set_tempo()
         self.num_measures = 0
 
     def __str__(self) -> str:
@@ -371,27 +381,34 @@ class Score:
 
         return string
 
-    def set_title(self, title: str):
-        """_summary_
+    def set_title(self, title="default"):
+        """
+        Sets the title of Score (object)
 
         Args:
-            title (_type_): _description_
+            title (str, optional): the title name to be used. Defaults to "default".
         """
         self.title = title
 
-    def set_composer(self, name):
-        """_summary_
+    def set_composer(self, name="default"):
+        """
+        Sets the composer of Score (object)
 
         Args:
-            name (_type_): _description_
+            composer (str, optional): the composer name to be used. Defaults to "default".
         """
         self.composer = name
 
-    def set_key(self, key: str):
-        """_summary_
+    def set_key(self, key="C"):
+        """
+        Sets the key of the Score (object) and the accidentals in that key
 
         Args:
-            key (str): _description_
+            key (str, optional): key name. Defaults to "C"
+
+        Examples:
+            key = "C" -> key accidentals = []\n
+            key = "D" -> key accidentals = [F C]
         """
         if key == "C":
             self.key_accidentals = []
@@ -410,29 +427,37 @@ class Score:
                 num_sharps = Score._major_sharp_key_order.index(key)
                 self.key_accidentals = Score._sharp_order[:num_sharps+1]
 
-    def set_time_sig(self, beats_per_measure: str, beats_per_note: str):
-        """_summary_
+        self.key = key
 
-        Args:
-            beats_per_measure (str): _description_
-            beats_per_note (str): _description_
+    def set_time_sig(self, beats_per_measure="4", beats_per_note="4"):
         """
-        self.time_sig = (int(beats_per_measure), 1/int(beats_per_note))
-
-    def set_tempo(self, tempo):
-        """_summary_
+        Sets the time signature of the Score (object)
 
         Args:
-            tempo (_type_): _description_
+            beats_per_measure (str, optional): the number of beats in a measure. Defaults to "4".
+            beats_per_note (str, optional): the denominator of the size of note given a single beat.
+                Typically a quarter note is given one beat. Defaults to "4".
+
+        """
+        self.time_sig = [beats_per_measure, beats_per_note]
+
+    def set_tempo(self, tempo=60.0):
+        """
+        Sets the tempo of the Score (object)
+
+        Args:
+            tempo (float, optional): number of beats per minute. Defaults to 60.0
         """
         if isinstance(tempo, float):
             self.tempo = tempo
 
     def get_work_info(self):
-        """_summary_
+        """
+        Gets the title and composer of the Score (object)
 
         Returns:
-            _type_: _description_
+            str: Score (object) information in the form:
+                "title" by "composer"
         """
         return str(self.title + " by " + self.composer)
 
@@ -442,12 +467,13 @@ class Score:
         Returns:
             _type_: _description_
         """
-        string = ""
+        string = self.key + " ["
+        if len(self.key_accidentals) > 0 and self.key_accidentals[0] == "F":
+            string += "Sharps: "
+        elif len(self.key_accidentals) > 0 and self.key_accidentals[0] == "B":
+            string += "Flats: "
 
-        for accid in self.key_accidentals:
-            string += str(accid) + " "
-
-        return string
+        return string + ", ".join(self.key_accidentals) + "]"
 
     def get_time_signature(self):
         """_summary_
@@ -455,7 +481,7 @@ class Score:
         Returns:
             _type_: _description_
         """
-        return str(self.time_sig[0]) + "/" + str(int(1/self.time_sig[1]))
+        return "Time Signature: " + "/".join(self.time_sig)
 
     def get_score_info(self):
         """_summary_

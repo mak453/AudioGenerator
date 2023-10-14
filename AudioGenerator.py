@@ -2,6 +2,7 @@ import argparse
 import Dependencies.mei_parser as mei_parser
 import Helper_Files.demo as demo
 import Dependencies.synthesizer as synth
+from Dependencies.score_composer import Score
 
 
 def display_information():
@@ -34,8 +35,15 @@ if __name__ == "__main__":
                         help='Demos current state of code')
 
     args = parser.parse_args()
+    bits = args.bit_depth
 
     # print(args.mei_file)
+    while bits not in [16, 32]:
+        print("ERROR **Bit depth must be either 16 or 32")
+        bits = int(input("Enter bit depth: "))
+
+    Score.sample_rate = args.sample_rate
+    Score.bit_depth = bits
 
     if args.demo:
         string = "\n\nDEMO (Reading in 3 .mei files and displaying score info)\n"
@@ -48,7 +56,7 @@ if __name__ == "__main__":
             args.mei_file, args.sample_rate, args.bit_depth)
         print()
 
-        string = "\n\nDEMO (Making C major scale audio file from .mei file)\n"
+        string = "\n\nDEMO (Making major scale audio file from .mei file)\n"
         print("\n\n**********************************************************")
         input(string)
 
