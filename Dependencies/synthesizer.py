@@ -1,5 +1,5 @@
 import numpy as np
-from Dependencies.score_composer import Note, Chord, Staff, Score
+from Dependencies.score_composer import Note, Chord, Score
 import soundfile as sf
 
 
@@ -10,7 +10,7 @@ def make_fundamental(score: Score, note: Note):
         score (Score): _description_
         note (Note): _description_
     """
-    num_beats = (1/note.note_length)/score.time_sig[1]
+    num_beats = note.note_length*int(score.time_sig[1])
     note_time = num_beats*60/score.tempo
     time = np.arange(0, note_time, 1/score.sample_rate)
     note.data_samples = np.array(
@@ -70,7 +70,7 @@ def write_audio_file(score: Score, data, temp=""):
         score (Score): _description_
         data (_type_): _description_
     """
-    sf.write("./Output_Audio/"+score.title+".wav", data.astype(np.int16),
+    sf.write("./Output_Audio/"+score.title+".wav", data,
              score.sample_rate)
     return
 
@@ -96,10 +96,10 @@ def make_audio_file(score: Score):
     """
 
     samples_per_measure = int(
-        (score.tempo/60.0)*score.sample_rate*score.time_sig[0])
-    # print(samples_per_measure, score.num_measures)
+        (score.tempo/60.0)*score.sample_rate*int(score.time_sig[0]))
+    print(samples_per_measure, score.num_measures)
     data = np.zeros(samples_per_measure*score.num_measures, dtype=np.int16)
-    print(len(data))
+
     for staff in score.staves:
         for layer in staff.layers:
             start = (layer[0].measure-1)*samples_per_measure

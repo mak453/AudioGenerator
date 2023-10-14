@@ -123,10 +123,10 @@ def chord_event(chord_elem: Element, score: Score):
 
     for chord_note in chord_elem.iter(ns["default"] + "note"):
         if "dots" in chord_elem.attrib:
-            duration = int(chord_elem.attrib["dur"]) + \
-                int(chord_elem.attrib["dur"])/2
+            duration = float(chord_elem.attrib["dur"]) + \
+                float(chord_elem.attrib["dur"])/2.0
         else:
-            duration = int(chord_elem.attrib["dur"])
+            duration = float(chord_elem.attrib["dur"])
 
         new_note = Note(note_event(chord_note, score),
                         duration)
@@ -149,9 +149,9 @@ def beam_event(beam_elem: Element, staff: Staff, score: Score, curr_measure=0, c
         tag_name = elem.tag[SKIP:]
         if tag_name == "note":
             if "dots" in elem.attrib:
-                duration = int(elem.attrib["dur"]) + int(elem.attrib["dur"])/2
+                duration = float(elem.attrib["dur"]) + float(elem.attrib["dur"])/2
             else:
-                duration = int(elem.attrib["dur"])
+                duration = float(elem.attrib["dur"])
             new_event = Note(note_event(elem, score),
                              duration)
             synthesizer.make_fundamental(score, new_event)
@@ -206,10 +206,10 @@ def traverse(root: Element, score: Score):
                                     pitch = note_event(
                                         event_elem, score)
                                     if "dots" in event_elem.attrib:
-                                        duration = int(
-                                            event_elem.attrib["dur"]) + int(event_elem.attrib["dur"])/2
+                                        duration = float(
+                                            event_elem.attrib["dur"]) + float(event_elem.attrib["dur"])/2
                                     else:
-                                        duration = int(
+                                        duration = float(
                                             event_elem.attrib["dur"])
                                     new_event = Note(
                                         pitch, duration)
@@ -221,10 +221,10 @@ def traverse(root: Element, score: Score):
                                     synthesizer.make_chord(new_event)
                                 elif event == "rest":
                                     if "dots" in event_elem.attrib:
-                                        duration = int(
+                                        duration = float(
                                             event_elem.attrib["dur"]) + int(event_elem.attrib["dur"])/2
                                     else:
-                                        duration = int(
+                                        duration = float(
                                             event_elem.attrib["dur"])
                                     new_event = Note(
                                         "rest", duration)
@@ -232,7 +232,7 @@ def traverse(root: Element, score: Score):
                                         score, new_event)
                                 elif event == "mRest":
                                     new_event = Note(
-                                        "mRest", score.time_sig[0])
+                                        "mRest", float(score.time_sig[0]))
                                     synthesizer.make_fundamental(
                                         score, new_event)
 
