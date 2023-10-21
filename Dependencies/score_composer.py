@@ -226,12 +226,12 @@ class Note:
 
     def set_note_length(self, length: float):
         """
-        Takes the number of beats (float) assigned to the note 
+        Takes the note division (float) assigned to the note 
 
         Args:
             length (float): number of beats the note gets
         """
-        self.note_length = length
+        self.length = 1/length
 
     def set_data_samples(self, data):
         """
@@ -252,7 +252,7 @@ class Note:
         self.measure = measure
 
     def __str__(self) -> str:
-        return "M:" + str(self.measure) + " " + self.note_name + "<1/" + str(self.note_length) + ">[" + str(self.fundamental_freq)+"Hz]"
+        return "M:" + str(self.measure) + " " + self.note_name + " {" + str(self.length) + "}[" + str(self.fundamental_freq)+"Hz]"
 
 
 class Chord:
@@ -267,6 +267,7 @@ class Chord:
         self.chord_notes = []
         self.data_samples = []
         self.measure = 0
+        self.length = 0
 
     def __str__(self) -> str:
         all_notes = []
@@ -274,7 +275,7 @@ class Chord:
         for note in self.chord_notes:
             string = note.note_name + "[" + str(note.fundamental_freq) + "]"
             all_notes.append(string)
-            duration = note.note_length
+            duration = note.length
 
         return "M:" + str(self.measure) + " Chord(" + " ".join(all_notes) + ")" + "<1/" + str(duration) + ">"
 
@@ -361,10 +362,12 @@ class Score:
 
     sample_rate = 0
     bit_depth = 0
+    score_num = 0
 
     def __init__(self) -> None:
         """_summary_
         """
+        Score.score_num += 1
         self.set_title()
         self.set_composer()
         self.staves: list[Staff] = []
@@ -373,6 +376,9 @@ class Score:
         self.set_time_sig()
         self.set_tempo()
         self.num_measures = 0
+        self.samples_per_beat = int(Score.sample_rate*60/self.tempo)
+        self.samples_per_measure = int(
+            self.samples_per_beat*int(self.time_sig[0]))
 
     def __str__(self) -> str:
         string = ""

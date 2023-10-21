@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="https://music-encoding.org/schema/5.0/mei-all.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="https://music-encoding.org/schema/5.0/mei-all.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<mei xmlns="http://www.music-encoding.org/ns/mei" meiversion="5.0">
+  <meiHead>
+    <fileDesc>
+      <titleStmt>
+        <title>C Chord<titlePart type="subordinate">an electronic transcription</titlePart></title>
+        <composer>
+          <persName role="creator" codedval="119174030" auth.uri="http://d-nb.info/gnd/" auth="GND">Maggie K</persName>
+        </composer>
+      </titleStmt>
+    </fileDesc>   
+    <workList>
+      <work>
+        <title>C major scale</title>
+        <composer>
+          <persName role="composer" codedval="119174030" auth.uri="http://d-nb.info/gnd/" auth="GND">Maggie K</persName>
+        </composer>
+        <key pname="c" mode="major">As-Dur</key>
+        <meter count="4" unit="4"/>
+        <tempo>Tempo di marcia</tempo>
+        <incip>
+          <incipCode form="parsons">*uduududuu</incipCode>
+        </incip>
+        <creation>
+          <date>1899</date>
+        </creation>
+        <perfMedium>
+          <perfResList>
+            <perfRes codedval="ka">Piano</perfRes>
+          </perfResList>
+        </perfMedium>
+        <classification>
+          <termList>
+            <term class="#_4030993-9">Klaviermusik</term>
+            <term class="#_4129951-6">Instrumentalmusik</term>
+            <term class="#_4462339-2">Tasteninstrumentenmusik</term>
+            <term class="#_786.2">Piano</term>
+          </termList>
+        </classification>
+      </work>
+    </workList>
+  </meiHead>
+  <music>
+    <body>
+      <mdiv>
+        <score>
+          <scoreDef ppq="4" meter.count="4" meter.unit="4" keysig="0" key.mode="major" text.name="FreeSerif" text.size="10pt" lyric.name="FreeSerif" lyric.size="11pt" vu.height="0.75mm" page.height="372.534" page.width="287.866" page.leftmar="11.644" page.rightmar="11.644" page.topmar="20.288" page.botmar="20.288" midi.bpm="52">
+            <staffGrp>
+              <staffGrp xml:id="P1" symbol="brace">
+                <instrDef xml:id="P1-I1" midi.channel="1" midi.volume="99" midi.pan="64" midi.instrnum="0"/>
+                <staffDef n="1" lines="5" clef.line="2" clef.shape="G"/>
+              </staffGrp>
+            </staffGrp>
+          </scoreDef>
+          <section>
+            <measure n="1" xml:id="d1e58" right="rptstart" width="40.224" metcon="false">
+              <staff n="1">
+                <layer n="1">
+                  <chord dur="1">
+                    <note pname="c" oct="4"/>
+                    <note pname="e" oct="4"/>
+                    <note pname="g" oct="4"/> 
+                  </chord>
+                </layer>
+              </staff>
+            </measure>
+            <measure n="2" xml:id="d1e58" right="rptstart" width="40.224" metcon="false">
+              <staff n="1">
+                <layer n="1">
+                  <chord dur="1">
+                    <note pname="c" oct="4"/>
+                    <note pname="e" oct="4"/>
+                    <note pname="g" oct="4"/> 
+                  </chord>
+                </layer>
+              </staff>
+            </measure>
+          </section>
+        </score>
+      </mdiv>
+    </body>
+  </music>
+</mei>

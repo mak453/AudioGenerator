@@ -5,6 +5,7 @@ import xml.etree.ElementTree as et
 from xml.etree.ElementTree import Element
 from Dependencies.score_composer import Score, Chord, Staff, Note
 import Dependencies.synthesizer as synthesizer
+import numpy as np
 
 ns = {'default': '{http://www.music-encoding.org/ns/mei}'}
 
@@ -25,7 +26,7 @@ def disect_mei(folder: list, sample_rate: int, bit_depth: int):
     Score.sample_rate = sample_rate
     Score.bit_depth = bit_depth
 
-    for file in folder:
+    for num, file in enumerate(folder):
         mei = et.parse(file)
         root = mei.getroot()
         version = root.attrib["meiversion"]
@@ -35,6 +36,7 @@ def disect_mei(folder: list, sample_rate: int, bit_depth: int):
         synthesizer.make_audio_file(new_score)
 
         scores.append(new_score)
+        print(new_score)
         input()
 
     return scores, version
@@ -120,6 +122,7 @@ def chord_event(chord_elem: Element, score: Score):
         _type_: _description_
     """
     new_chord = Chord()
+    duration = 0
 
     for chord_note in chord_elem.iter(ns["default"] + "note"):
         if "dots" in chord_elem.attrib:
@@ -130,9 +133,10 @@ def chord_event(chord_elem: Element, score: Score):
 
         new_note = Note(note_event(chord_note, score),
                         duration)
-        synthesizer.make_fundamental(score, new_note)
+        synthesizer.set_data(score, new_note)
         new_chord.add_note_to_chord(new_note)
 
+    new_chord.length = duration
     return new_chord
 
 
@@ -149,15 +153,16 @@ def beam_event(beam_elem: Element, staff: Staff, score: Score, curr_measure=0, c
         tag_name = elem.tag[SKIP:]
         if tag_name == "note":
             if "dots" in elem.attrib:
-                duration = float(elem.attrib["dur"]) + float(elem.attrib["dur"])/2
+                duration = float(elem.attrib["dur"]) + \
+                    float(elem.attrib["dur"])/2
             else:
                 duration = float(elem.attrib["dur"])
             new_event = Note(note_event(elem, score),
                              duration)
-            synthesizer.make_fundamental(score, new_event)
+            synthesizer.set_data(score, new_event)
         elif tag_name == "chord":
             new_event = chord_event(elem, score)
-            synthesizer.make_chord(new_event)
+            synthesizer.set_data(score, new_event)
 
         staff.add_event_to_layer(new_event, curr_layer, curr_measure)
 
@@ -213,12 +218,9 @@ def traverse(root: Element, score: Score):
                                             event_elem.attrib["dur"])
                                     new_event = Note(
                                         pitch, duration)
-                                    synthesizer.make_fundamental(
-                                        score, new_event)
                                 elif event == "chord":
                                     new_event = chord_event(
                                         event_elem, score)
-                                    synthesizer.make_chord(new_event)
                                 elif event == "rest":
                                     if "dots" in event_elem.attrib:
                                         duration = float(
@@ -228,14 +230,13 @@ def traverse(root: Element, score: Score):
                                             event_elem.attrib["dur"])
                                     new_event = Note(
                                         "rest", duration)
-                                    synthesizer.make_fundamental(
-                                        score, new_event)
+
                                 elif event == "mRest":
                                     new_event = Note(
                                         "mRest", float(score.time_sig[0]))
-                                    synthesizer.make_fundamental(
-                                        score, new_event)
 
+                                new_event.measure = curr_measure
+                                synthesizer.set_data(score, new_event)
                                 curr_staff.add_event_to_layer(
                                     new_event, curr_layer, curr_measure)
 
