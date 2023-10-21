@@ -64,7 +64,7 @@ if __name__ == "__main__":
 
     else:
         scores, version = mei_parser.disect_mei(
-            args.mei_file, args.sample_rate, args.bit_depth)
+            args.mei_file, args.sample_rate, args.bit_depth, args.output)
 
     if args.music_xml:
         mei_parser.convert_to_music_xml()
