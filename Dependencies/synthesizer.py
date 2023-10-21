@@ -63,14 +63,18 @@ def make_layer(score: Score, layer: list, samples_per_measure):
     return data
 
 
-def write_audio_file(score: Score, data, temp=""):
+def write_audio_file(score: Score, data, output_filepath=None):
     """_summary_
 
     Args:
         score (Score): _description_
         data (_type_): _description_
+        output_directory (_type_): _description_
     """
-    sf.write("./Output_Audio/"+score.title+".wav", data,
+    if output_filepath is None:
+        output_filepath = "./Output_Audio/"+score.title+".wav"
+    
+    sf.write(output_filepath, data,
              score.sample_rate)
     return
 
@@ -88,7 +92,7 @@ def play_each_note(score: Score):
                 write_audio_file(score, event.data_samples, str(num))
 
 
-def make_audio_file(score: Score):
+def make_audio_file(score: Score, output_filepath):
     """_summary_
 
     Args:
@@ -106,4 +110,4 @@ def make_audio_file(score: Score):
             layer_data = make_layer(score, layer, samples_per_measure)
             data[start:start+len(layer_data)] = layer_data
 
-    write_audio_file(score, data)
+    write_audio_file(score, data, output_filepath)
