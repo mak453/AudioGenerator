@@ -20,7 +20,7 @@ if __name__ == "__main__":
         prog='MEI to Audio Converter', description='Generates WAV file from MEI file')
     parser.add_argument('mei_file', nargs='+', help='Input .mei file(s)')
     parser.add_argument('-out', '--output', nargs='*', type=str,
-                        default="output.wav", help='Output filename')
+                        default=None, help='Output filename')
     parser.add_argument('-v', '--show_version', action='store_true',
                         help='Show MEI (and MusicXML) file format version')
     parser.add_argument('-s', '--sample_rate', type=int,
@@ -60,11 +60,11 @@ if __name__ == "__main__":
         print("\n\n**********************************************************")
         input(string)
 
-        synth.make_audio_file(scores[-1])
+        synth.make_audio_file(scores[-1], args.output)
 
     else:
         scores, version = mei_parser.disect_mei(
-            args.mei_file, args.sample_rate, args.bit_depth)
+            args.mei_file, args.sample_rate, args.bit_depth, args.output)
 
     if args.music_xml:
         mei_parser.convert_to_music_xml()

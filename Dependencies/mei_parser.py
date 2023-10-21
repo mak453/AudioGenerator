@@ -12,7 +12,7 @@ ns = {'default': '{http://www.music-encoding.org/ns/mei}'}
 SKIP = len(ns["default"])
 
 
-def disect_mei(folder: list, sample_rate: int, bit_depth: int):
+def disect_mei(folder: list, sample_rate: int, bit_depth: int, output_filepath):
     """_summary_
 
     Args:
@@ -33,7 +33,7 @@ def disect_mei(folder: list, sample_rate: int, bit_depth: int):
         new_score = Score()
 
         traverse(root, new_score)
-        synthesizer.make_audio_file(new_score)
+        synthesizer.make_audio_file(new_score, output_filepath)
 
         scores.append(new_score)
         print(new_score)
