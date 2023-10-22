@@ -33,10 +33,9 @@ def disect_mei(folder: list, sample_rate: int, bit_depth: int):
         new_score = Score()
 
         mei_parser.traverse(root, new_score)
-        input("Press 'ENTER' to print information\n")
-        print(new_score)
+        #input("Press 'ENTER' to print information\n")
 
         scores.append(new_score)
-        input()
+        #input()
 
     return scores, str(version)

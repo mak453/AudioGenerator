@@ -36,8 +36,7 @@ def disect_mei(folder: list, sample_rate: int, bit_depth: int, output_filepath):
         synthesizer.make_audio_file(new_score, output_filepath)
 
         scores.append(new_score)
-        print(new_score)
-        input()
+        #input()
 
     return scores, version
 

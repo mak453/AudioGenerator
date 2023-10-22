@@ -51,14 +51,13 @@ if __name__ == "__main__":
         string += "\tNote info divided by each staff, layer, and notes/chords with their fundamental frequencies"
         string += "\n\tWhen a note is created the data samples for the fundamental freq are immediately created"
 
-        input(string)
+        #input(string)
         scores, version = demo.disect_mei(
             args.mei_file, args.sample_rate, args.bit_depth)
-        print()
 
         string = "\n\nDEMO (Making major scale audio file from .mei file)\n"
         print("\n\n**********************************************************")
-        input(string)
+        #input(string)
 
         synth.make_audio_file(scores[-1], args.output)
 

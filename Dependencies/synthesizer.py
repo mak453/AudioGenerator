@@ -15,7 +15,7 @@ def butter_bandpass_filter(data, lowcut, highcut, fs, order=5):
     return y
 
 
-def make_audio_file(score: Score):
+def make_audio_file(score: Score, output_filepath):
 
     audio_data = np.zeros(score.num_measures *
                           score.samples_per_measure, dtype=np.int16)
@@ -30,9 +30,11 @@ def make_audio_file(score: Score):
     for i in audio_data[::int(score.sample_rate/10)]:
         print(i, end=" ")
 
-    file_name = "_".join(score.title.split(" "))
-    sf.write("./Output_audio/" + file_name +
-             ".wav", audio_data, score.sample_rate)
+    if(output_filepath == "" or output_filepath is None):
+        file_name = score.title.split(" ")
+        output_filepath = "/Output_audio/" + file_name[0] +".wav"
+
+    sf.write(output_filepath[0], audio_data, score.sample_rate)
 
 
 def set_data(score: Score, event):
@@ -59,12 +61,10 @@ def set_data(score: Score, event):
                                     fundamental*(2**i)*time_array))
 
         data = 2*((data - min(data)) / (max(data) - min(data)))-1
-        print(data)
         data *= (2**(Score.bit_depth-2))
         event.data_samples = np.array(data, dtype=data_type)
 
     elif isinstance(event, Chord):
-        print("Chord", event_time)
         data = np.zeros(time_array.size)
 
         for note in event.chord_notes:
