@@ -20,7 +20,7 @@ if __name__ == "__main__":
         prog='MEI to Audio Converter', description='Generates WAV file from MEI file')
     parser.add_argument('mei_file', nargs='+', help='Input .mei file(s)')
     parser.add_argument('-out', '--output', nargs='*', type=str,
-                        default=None, help='Output filename')
+                        default="default", help='Output filename')
     parser.add_argument('-v', '--show_version', action='store_true',
                         help='Show MEI (and MusicXML) file format version')
     parser.add_argument('-s', '--sample_rate', type=int,

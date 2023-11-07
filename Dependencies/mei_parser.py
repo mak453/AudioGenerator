@@ -6,13 +6,14 @@ from xml.etree.ElementTree import Element
 from Dependencies.score_composer import Score, Chord, Staff, Note
 import Dependencies.synthesizer as synthesizer
 import numpy as np
+import time
 
 ns = {'default': '{http://www.music-encoding.org/ns/mei}'}
 
 SKIP = len(ns["default"])
 
 
-def disect_mei(folder: list, sample_rate: int, bit_depth: int, output_filepath):
+def disect_mei(folder: list, sample_rate: int, bit_depth: int, output_filepath: str):
     """_summary_
 
     Args:
@@ -32,12 +33,16 @@ def disect_mei(folder: list, sample_rate: int, bit_depth: int, output_filepath):
         version = root.attrib["meiversion"]
         new_score = Score()
 
+        start_time = time.time()
         traverse(root, new_score)
+        traversal_time = time.time() - start_time
+        print("Traversal Time (s): ", traversal_time)
         synthesizer.make_audio_file(new_score, output_filepath)
+        print("Audio File Time (s): ", time.time() - traversal_time)
+        print("Overall Time (s): ", time.time() - start_time)
 
         scores.append(new_score)
         print(new_score)
-        input()
 
     return scores, version
 
@@ -189,6 +194,7 @@ def traverse(root: Element, score: Score):
         if "n" in measure.attrib and int(measure.attrib["n"]) > curr_measure:
             curr_measure += 1
             score.num_measures += 1
+            print("M: " + str(curr_measure))
             for staff in measure.iter(ns["default"] + "staff"):
                 if "n" in staff.attrib and int(staff.attrib["n"]) > len(score.staves):
                     score.add_staff_to_score()
