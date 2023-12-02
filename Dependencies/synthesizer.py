@@ -105,7 +105,7 @@ def make_audio_file(score: Score, filepath="default", instrument="mandolin"):
 
     audio_data = (audio_data/max(audio_data))
 
-    sf.write("output.wav", audio_data, score.sample_rate)
+    sf.write(filepath, audio_data, score.sample_rate)
 
 
 # def set_data(score: Score, event):
