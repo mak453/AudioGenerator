@@ -1,3 +1,8 @@
+"""
+
+"""
+
+
 class Note:
     """
     Lowest level structure that can be added to a Score (object)
@@ -231,7 +236,7 @@ class Note:
         Args:
             length (float): number of beats the note gets
         """
-        self.length = 1/length
+        self.length = length
 
     def set_data_samples(self, data):
         """
@@ -265,19 +270,18 @@ class Chord:
         Creates Chord (object)
         """
         self.chord_notes = []
-        self.data_samples = []
+        # self.data_samples = []
         self.measure = 0
         self.length = 0
 
     def __str__(self) -> str:
         all_notes = []
-        duration = ""
         for note in self.chord_notes:
-            string = note.note_name + "[" + str(note.fundamental_freq) + "]"
+            string = note.note_name + "[" + str(note.fundamental_freq) + "Hz]"
             all_notes.append(string)
-            duration = note.length
+            self.length = float(note.length)
 
-        return "M:" + str(self.measure) + " Chord(" + " ".join(all_notes) + ")" + "<1/" + str(duration) + ">"
+        return "M:" + str(self.measure) + " Chord(" + " ".join(all_notes) + ")" + "{" + str(self.length) + "}"
 
     def add_note_to_chord(self, note: Note):
         """
@@ -308,7 +312,7 @@ class Staff:
 
     def __init__(self) -> None:
         self.layers = [[]]
-        self.sample_data = []
+        # self.sample_data = []
 
     def add_layer_to_staff(self):
         """
@@ -360,11 +364,11 @@ class Score:
     _minor_sharp_key_order = ["Em", "Bm", "F#m", "C#m", "G#m", "D#m", "A#m"]
     _minor_flat_key_order = ["Dm", "Gm", "Cm", "Fm", "Bbm", "Ebm", "Abm"]
 
-    sample_rate = 0
-    bit_depth = 0
+    sample_rate = 44100
+    bit_depth = 16
     score_num = 0
 
-    def __init__(self) -> None:
+    def __init__(self, tempo: float) -> None:
         """_summary_
         """
         Score.score_num += 1
@@ -374,11 +378,8 @@ class Score:
         self.data_samples = []
         self.set_key()
         self.set_time_sig()
-        self.set_tempo()
+        self.set_tempo(tempo=tempo)
         self.num_measures = 0
-        self.samples_per_beat = int(Score.sample_rate*60/self.tempo)
-        self.samples_per_measure = int(
-            self.samples_per_beat*int(self.time_sig[0]))
 
     def __str__(self) -> str:
         string = ""
@@ -413,7 +414,7 @@ class Score:
             key (str, optional): key name. Defaults to "C"
 
         Examples:
-            key = "C" -> key accidentals = []\n
+            key = "C" -> key accidentals = []
             key = "D" -> key accidentals = [F C]
         """
         if key == "C":

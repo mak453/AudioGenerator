@@ -13,7 +13,7 @@ ns = {'default': '{http://www.music-encoding.org/ns/mei}'}
 SKIP = len(ns["default"])
 
 
-def disect_mei(folder: list, sample_rate: int, bit_depth: int, output_filepath: str):
+def disect_mei(folder: list, output_filepath: str, tempo: float, instrument: str):
     """_summary_
 
     Args:
@@ -24,25 +24,28 @@ def disect_mei(folder: list, sample_rate: int, bit_depth: int, output_filepath: 
     """
     scores = []
 
-    Score.sample_rate = sample_rate
-    Score.bit_depth = bit_depth
-
     for num, file in enumerate(folder):
         mei = et.parse(file)
         root = mei.getroot()
         version = root.attrib["meiversion"]
-        new_score = Score()
+        new_score = Score(tempo)
 
         start_time = time.time()
+        print("Traversing through MEI file #" + str(num + 1) + " \n")
         traverse(root, new_score)
-        traversal_time = time.time() - start_time
+
+        traversal_time = np.round(time.time() - start_time, 3)
         print("Traversal Time (s): ", traversal_time)
-        synthesizer.make_audio_file(new_score, output_filepath)
-        print("Audio File Time (s): ", time.time() - traversal_time)
-        print("Overall Time (s): ", time.time() - start_time)
+        print("\nWriting audio file\n")
+
+        synthesizer.make_audio_file(
+            new_score, output_filepath, instrument.lower())
+        print("\nAudio File Time (s): ", np.round(
+            time.time() - start_time - traversal_time, 3))
+
+        print("\nOverall Time (s): ", np.round(time.time() - start_time, 3))
 
         scores.append(new_score)
-        print(new_score)
 
     return scores, version
 
@@ -138,7 +141,7 @@ def chord_event(chord_elem: Element, score: Score):
 
         new_note = Note(note_event(chord_note, score),
                         duration)
-        synthesizer.set_data(score, new_note)
+        # synthesizer.set_data(score, new_note)
         new_chord.add_note_to_chord(new_note)
 
     new_chord.length = duration
@@ -164,10 +167,10 @@ def beam_event(beam_elem: Element, staff: Staff, score: Score, curr_measure=0, c
                 duration = float(elem.attrib["dur"])
             new_event = Note(note_event(elem, score),
                              duration)
-            synthesizer.set_data(score, new_event)
+            # synthesizer.set_data(score, new_event)
         elif tag_name == "chord":
             new_event = chord_event(elem, score)
-            synthesizer.set_data(score, new_event)
+            # synthesizer.set_data(score, new_event)
 
         staff.add_event_to_layer(new_event, curr_layer, curr_measure)
 
@@ -183,6 +186,7 @@ def traverse(root: Element, score: Score):
     curr_measure = 0
     curr_staff = Staff
     curr_layer = 0
+    highest_measure = 0
 
     for element in root.iter():
         if found < 4 and set_score_info(element, score, found):
@@ -192,9 +196,12 @@ def traverse(root: Element, score: Score):
 
     for measure in root.iter(ns["default"] + "measure"):
         if "n" in measure.attrib and int(measure.attrib["n"]) > curr_measure:
-            curr_measure += 1
-            score.num_measures += 1
-            print("M: " + str(curr_measure))
+            curr_measure = int(measure.attrib["n"])
+
+            if curr_measure > highest_measure:
+                highest_measure = curr_measure
+                score.num_measures = highest_measure
+
             for staff in measure.iter(ns["default"] + "staff"):
                 if "n" in staff.attrib and int(staff.attrib["n"]) > len(score.staves):
                     score.add_staff_to_score()
@@ -242,7 +249,7 @@ def traverse(root: Element, score: Score):
                                         "mRest", float(score.time_sig[0]))
 
                                 new_event.measure = curr_measure
-                                synthesizer.set_data(score, new_event)
+
                                 curr_staff.add_event_to_layer(
                                     new_event, curr_layer, curr_measure)
 
