@@ -12,7 +12,7 @@ if __name__ == "__main__":
     parser.add_argument('-out', '--output', nargs='*', type=str,
                         default="default", help='Output filename')
     parser.add_argument('-tempo', '--tempo', type=float, default=60.0)
-    parser.add_argument('-instrument', '--instrument', type=str,
+    parser.add_argument('-instrument', '--instrument', type=str, choices={"guitar", "mandolin", "violin"},
                         default='mandolin', help='Select instrument to synthesize')
     # parser.add_argument('-v', '--show_version', action='store_true',
     #                     help='Show MEI (and MusicXML) file format version')

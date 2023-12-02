@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from Dependencies.Instruments import amplitude_envelope, normalize, Violin, Mandolin, Guitar
 
 
-def make_audio_file(score: Score, file_name="default", instrument="mandolin"):
+def make_audio_file(score: Score, filepath="default", instrument="mandolin"):
     # print(score.time_sig, score.tempo)
 
     samples_per_measure = int(
@@ -99,13 +99,13 @@ def make_audio_file(score: Score, file_name="default", instrument="mandolin"):
 
                 start += num_samples
 
-    if file_name == "default":
-        file_name = "_".join(score.title.split(" "))
+    if filepath == "default":
+        filepath = "_".join(score.title.split(" "))
+        filepath = "./Output_audio/" + filepath + ".wav"
 
     audio_data = (audio_data/max(audio_data))
 
-    sf.write("./Output_audio/" + file_name +
-             ".wav", audio_data, score.sample_rate)
+    sf.write("output.wav", audio_data, score.sample_rate)
 
 
 # def set_data(score: Score, event):
