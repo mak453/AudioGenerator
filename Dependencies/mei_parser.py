@@ -197,7 +197,7 @@ def traverse(root: Element, score: Score):
     for measure in root.iter(ns["default"] + "measure"):
         if "n" in measure.attrib and int(measure.attrib["n"]) > curr_measure:
             curr_measure = int(measure.attrib["n"])
-
+            print(curr_measure)
             if curr_measure > highest_measure:
                 highest_measure = curr_measure
                 score.num_measures = highest_measure
@@ -216,41 +216,41 @@ def traverse(root: Element, score: Score):
 
                         for event_elem in layer:
                             event = event_elem.tag[SKIP:]
+
                             if event == "beam":
                                 beam_event(
                                     event_elem, curr_staff, score, curr_measure, curr_layer)
-                            else:
-                                if event == "note":
-                                    pitch = note_event(
-                                        event_elem, score)
-                                    if "dots" in event_elem.attrib:
-                                        duration = float(
-                                            event_elem.attrib["dur"]) + float(event_elem.attrib["dur"])/2
-                                    else:
-                                        duration = float(
-                                            event_elem.attrib["dur"])
-                                    new_event = Note(
-                                        pitch, duration)
-                                elif event == "chord":
-                                    new_event = chord_event(
-                                        event_elem, score)
-                                elif event == "rest":
-                                    if "dots" in event_elem.attrib:
-                                        duration = float(
-                                            event_elem.attrib["dur"]) + int(event_elem.attrib["dur"])/2
-                                    else:
-                                        duration = float(
-                                            event_elem.attrib["dur"])
-                                    new_event = Note(
-                                        "rest", duration)
+                            elif event == "note":
+                                pitch = note_event(
+                                    event_elem, score)
+                                if "dots" in event_elem.attrib:
+                                    duration = float(
+                                        event_elem.attrib["dur"]) + float(event_elem.attrib["dur"])/2
+                                else:
+                                    duration = float(
+                                        event_elem.attrib["dur"])
+                                new_event = Note(
+                                    pitch, duration)
+                            elif event == "chord":
+                                new_event = chord_event(
+                                    event_elem, score)
+                            elif event == "rest":
+                                if "dots" in event_elem.attrib:
+                                    duration = float(
+                                        event_elem.attrib["dur"]) + int(event_elem.attrib["dur"])/2
+                                else:
+                                    duration = float(
+                                        event_elem.attrib["dur"])
+                                new_event = Note(
+                                    "rest", duration)
+                            elif event == "mRest":
+                                new_event = Note(
+                                    "mRest", float(score.time_sig[0]))
+                            elif event == "mSpace":
+                                continue
 
-                                elif event == "mRest":
-                                    new_event = Note(
-                                        "mRest", float(score.time_sig[0]))
-
-                                new_event.measure = curr_measure
-
-                                curr_staff.add_event_to_layer(
-                                    new_event, curr_layer, curr_measure)
+                            new_event.measure = curr_measure
+                            curr_staff.add_event_to_layer(
+                                new_event, curr_layer, curr_measure)
 
     return
