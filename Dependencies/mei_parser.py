@@ -197,7 +197,7 @@ def traverse(root: Element, score: Score):
     for measure in root.iter(ns["default"] + "measure"):
         if "n" in measure.attrib and int(measure.attrib["n"]) > curr_measure:
             curr_measure = int(measure.attrib["n"])
-            print(curr_measure)
+            # print(curr_measure)
             if curr_measure > highest_measure:
                 highest_measure = curr_measure
                 score.num_measures = highest_measure
@@ -220,6 +220,7 @@ def traverse(root: Element, score: Score):
                             if event == "beam":
                                 beam_event(
                                     event_elem, curr_staff, score, curr_measure, curr_layer)
+                                continue
                             elif event == "note":
                                 pitch = note_event(
                                     event_elem, score)

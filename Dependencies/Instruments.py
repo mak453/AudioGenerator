@@ -1,7 +1,7 @@
 import numpy as np
 import soundfile as sf
 import matplotlib.pyplot as plt
-from pedalboard import Pedalboard, Chorus, Reverb, Compressor, Distortion
+from scipy import signal
 
 
 def normalize(x, bit_depth=16):
@@ -70,16 +70,15 @@ class PhysicalModeling(Synthesizer):
 
 
 class Guitar(PhysicalModeling):
-    board = Pedalboard(
-        [Reverb(room_size=.2, damping=.05, wet_level=.30, dry_level=.5)])
+
     note_bank = {}
     name = "Guitar"
 
     def __init__(self, fundamental_freq: float, num_samples: int, disp=False):
         super().__init__(fundamental_freq, num_samples)
 
-        self.data = self.board(super().make_data(
-            self.freq, self.note_bank), self.sample_rate)
+        self.data = super().make_data(
+            self.freq, self.note_bank)
 
         # super().write_audio(self.name + " " + str(self.freq) + "Hz")
         if disp:
@@ -87,8 +86,6 @@ class Guitar(PhysicalModeling):
 
 
 class Mandolin(PhysicalModeling):
-    board = Pedalboard(
-        [Reverb(room_size=.4, damping=.4, wet_level=.30, dry_level=.20)])
     note_bank = {}
     name = "Mandolin"
 
@@ -96,10 +93,10 @@ class Mandolin(PhysicalModeling):
         super().__init__(fundamental_freq, num_samples)
 
         string_1 = super().make_data(self.freq, self.note_bank)
-        freq_2 = super().cents(self.freq, -5)
+        freq_2 = super().cents(self.freq, -10)
         string_2 = super().make_data(freq_2, self.note_bank)
 
-        self.data = self.board(string_1 + string_2, self.sample_rate)
+        self.data = string_1 + string_2
 
         if disp:
             super().plot_audio(self.name + " " + str(self.freq) + "Hz")
@@ -113,14 +110,19 @@ class AdditiveSynthesis(Synthesizer):
     def make_sine_wave(self, freq, time, amplitude=1):
         return np.array(amplitude*np.sin(2*np.pi*freq*time))
 
+    def bandpass(self, data, bands: list):
+        filter_order = 4
+        b, a = signal.butter(filter_order, bands,
+                             btype="band", fs=super().sample_rate)
+        return signal.lfilter(b, a, data)
+
 
 class Violin(AdditiveSynthesis):
-    board = Pedalboard(
-        [Reverb(room_size=.5, damping=.3, wet_level=.50, dry_level=.4)])
-    amplitudes = [1, 0.263, 0.14, .099, .0209, .02, .029, .077, .017, .01]
+
+    amplitudes = [1, 0.273, 0.14, .1, .0209, .02, .03, .077, .017, .01]
     note_bank = {}
-    vibrato_variance = 13
-    vibrato_freq = 24
+    vibrato_variance = 6
+    vibrato_freq = 6.1
     name = "Violin"
 
     def __init__(self, fundamental_freq, num_samples: int, disp=False) -> None:
@@ -136,7 +138,8 @@ class Violin(AdditiveSynthesis):
 
             for harmonic, amp in enumerate(self.amplitudes, start=1):
                 freq = (fundamental_freq*harmonic) + self.vibrato_variance * \
-                    super().make_sine_wave(self.vibrato_freq*harmonic, time_array)
+                    super().make_sine_wave(self.vibrato_freq, time_array)
+
                 phase = 2*np.pi*np.cumsum(freq) / self.sample_rate
                 harmonic_data = amp*np.sin(phase)
                 data += harmonic_data
@@ -152,22 +155,22 @@ def amplitude_envelope(instrument: Synthesizer, sr=44100):
     envelope = np.zeros(len(instrument.data))
 
     attack_level = .6
-    attack_length = 1
-    sustain_level = .2
-    decay_length = 5
-    sustain_length = 5
+    attack_length = .5
+    sustain_level = .4
+    decay_length = .2
+    sustain_length = 10
 
-    if isinstance(instrument, Guitar) == "guitar":
+    if isinstance(instrument, Guitar):
         attack_level = .5
         attack_length = 1
         sustain_level = .3
         decay_length = 3
         sustain_length = 4
     elif isinstance(instrument, Violin):
-        attack_level = .4
-        attack_length = .5
-        sustain_level = .2
-        decay_length = 1.2
+        attack_level = .5
+        attack_length = 2
+        sustain_level = .3
+        decay_length = .3
         sustain_length = 20
 
     attack_length = attack_length*1e-2

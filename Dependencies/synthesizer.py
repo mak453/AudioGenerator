@@ -3,6 +3,7 @@ from Dependencies.score_composer import Note, Chord, Score
 import soundfile as sf
 import matplotlib.pyplot as plt
 from Dependencies.Instruments import amplitude_envelope, normalize, Violin, Mandolin, Guitar
+from pedalboard import Pedalboard, Chorus, Reverb, Compressor, Distortion
 
 
 def make_audio_file(score: Score, filepath="default", instrument="mandolin"):
@@ -29,14 +30,12 @@ def make_audio_file(score: Score, filepath="default", instrument="mandolin"):
                     (float(score.time_sig[1])/event.length)
 
                 num_samples = int(event_time * Score.sample_rate)
-                smooth_gap = int(.25*num_samples)
+                smooth_gap = int(.3*num_samples)
 
                 num_sound_samples = num_samples
 
-                if instrument == "mandolin" and start + num_samples < len(audio_data):
+                if start + num_samples < len(audio_data):
                     num_sound_samples = num_samples+smooth_gap
-                elif instrument == "violin":
-                    num_sound_samples = num_samples-smooth_gap
 
                 if isinstance(event, Chord):
                     chord_data = np.zeros(num_sound_samples)
@@ -61,6 +60,7 @@ def make_audio_file(score: Score, filepath="default", instrument="mandolin"):
                             envelope = amplitude_envelope(violin)
                             chord_data += violin.data*envelope
 
+                    chord_data /= max(chord_data)
                     try:
                         audio_data[start:start+num_sound_samples] += chord_data
                     except ValueError:
@@ -103,9 +103,29 @@ def make_audio_file(score: Score, filepath="default", instrument="mandolin"):
         filepath = "_".join(score.title.split(" "))
         filepath = "./Output_audio/" + filepath + ".wav"
 
-    audio_data = (audio_data/max(audio_data))
+    SNR = 20
 
-    sf.write(filepath, audio_data, score.sample_rate)
+    audio_power = np.mean(audio_data**2)
+    noise_power = audio_power/SNR
+    noise = 2.0*np.random.random(len(audio_data))-1
+    audio_data = audio_data + noise*noise_power
+
+    if instrument == "mandolin":
+        board = Pedalboard(
+            [Reverb(room_size=.25, damping=.1, wet_level=.2, dry_level=.15), Compressor(-8, 1.2)])
+        audio_data = board(audio_data, score.sample_rate)
+    elif instrument == "guitar":
+        board = Pedalboard(
+            [Reverb(room_size=.3, damping=.3, wet_level=.3, dry_level=.25)])
+        audio_data = board(audio_data, score.sample_rate)
+    elif instrument == "violin":
+        board = Pedalboard(
+            [Reverb(room_size=.5, damping=.3, wet_level=.55, dry_level=.25)])
+        audio_data = board(audio_data, score.sample_rate)
+    else:
+        pass
+
+    sf.write(filepath, audio_data/max(audio_data), score.sample_rate)
 
 
 # def set_data(score: Score, event):
