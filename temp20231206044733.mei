@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="https://music-encoding.org/schema/5.0/mei-all.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="https://music-encoding.org/schema/5.0/mei-all.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<mei xmlns="http://www.music-encoding.org/ns/mei" meiversion="5.0">
+   <meiHead xml:id="m18n90s5">
+      <fileDesc xml:id="f1k3r7j5">
+         <titleStmt xml:id="tkha4c4">
+            <title>20231206044733</title>
+            <respStmt>
+               <persName role="composer">Camera-PrIMuS_hybrid_semantic_v1-10-10</persName>
+            </respStmt>
+         </titleStmt>
+         <pubStmt xml:id="pfsost6">
+            <date isodate="2023-12-06" type="encoding-date">2023-12-06</date>
+         </pubStmt>
+      </fileDesc>
+      <encodingDesc xml:id="exmn8kf">
+         <appInfo xml:id="a1j97gce">
+            <application xml:id="a1suqao5" isodate="2023-12-06T04:47:34" version="4.1.0-dev-782c1fc">
+               <name xml:id="nn7ogs7">Verovio</name>
+               <p xml:id="poarqol">Transcoded from MusicXML</p>
+            </application>
+         </appInfo>
+      </encodingDesc>
+   </meiHead>
+   <music>
+      <body>
+         <mdiv xml:id="m18h3l2u">
+            <score xml:id="sj2sp79">
+               <scoreDef xml:id="s14tztq9">
+                  <staffGrp xml:id="s1h29jzc">
+                     <staffDef xml:id="P091dacf3e23dc6f276d9e60c78db9dfe" n="1" lines="5" ppq="10080">
+                        <clef xml:id="c1fhf68w" shape="F" line="4" />
+                        <meterSig xml:id="m16xcz72" count="4" sym="common" unit="4" />
+                     </staffDef>
+                  </staffGrp>
+               </scoreDef>
+               <section xml:id="s15rt4j9">
+                  <measure xml:id="m1ebzc5n" n="1">
+                     <staff xml:id="s1yur9v8" n="1">
+                        <layer xml:id="l1j4m0da" n="1">
+                           <note xml:id="ngh229" dur.ppq="5040" dur="8" oct="3" pname="e" />
+                           <note xml:id="n1834wr8" dur.ppq="5040" dur="8" oct="3" pname="a" />
+                           <note xml:id="n15r6wmq" dur.ppq="5040" dur="8" oct="4" pname="c" />
+                           <note xml:id="n1gybbhx" dur.ppq="5040" dur="8" oct="3" pname="e" />
+                           <note xml:id="nnc0yrm" dur.ppq="5040" dur="8" oct="3" pname="a" />
+                           <note xml:id="nr29vcb" dur.ppq="5040" dur="8" oct="4" pname="c" />
+                           <note xml:id="n1h5wk7n" dur.ppq="5040" dur="8" oct="3" pname="e" />
+                           <note xml:id="n7cmw2p" dur.ppq="5040" dur="8" oct="3" pname="a" />
+                           <note xml:id="n15n88dz" dur.ppq="5040" dur="8" oct="4" pname="c" />
+                           <note xml:id="neugylq" dur.ppq="5040" dur="8" oct="3" pname="e" />
+                           <note xml:id="nrkmxy5" dur.ppq="5040" dur="8" oct="3" pname="a" />
+                           <note xml:id="nnncczk" dur.ppq="5040" dur="8" oct="4" pname="c" />
+                        </layer>
+                     </staff>
+                     <tie xml:id="td3e4fd" startid="#ngh229" />
+                     <tie xml:id="t1eaqoav" startid="#n1h5wk7n" />
+                  </measure>
+                  <measure xml:id="mt2utun" n="2">
+                     <staff xml:id="s1i8jxj2" n="1">
+                        <layer xml:id="l3wf07e" n="1">
+                           <note xml:id="n12js0h9" dur.ppq="5040" dur="8" oct="3" pname="e" />
+                           <note xml:id="nmahx5l" dur.ppq="5040" dur="8" oct="3" pname="a" />
+                           <note xml:id="n1azlz7f" dur.ppq="5040" dur="8" oct="4" pname="c" />
+                           <note xml:id="nn6z114" dur.ppq="5040" dur="8" oct="3" pname="e" />
+                           <note xml:id="n1y1oo7w" dur.ppq="5040" dur="8" oct="3" pname="a" />
+                           <note xml:id="n10iupeq" dur.ppq="5040" dur="8" oct="4" pname="c" />
+                           <note xml:id="nuh0qfl" dur.ppq="5040" dur="8" oct="3" pname="e" />
+                           <note xml:id="nzwedcv" dur.ppq="5040" dur="8" oct="3" pname="a" />
+                           <note xml:id="nf6vznj" dur.ppq="5040" dur="8" oct="4" pname="c" />
+                           <note xml:id="n9sr17c" dur.ppq="5040" dur="8" oct="3" pname="e" />
+                           <note xml:id="npwpv2o" dur.ppq="5040" dur="8" oct="3" pname="a" />
+                           <note xml:id="n1m3lhg2" dur.ppq="5040" dur="8" oct="4" pname="c" />
+                        </layer>
+                     </staff>
+                     <tie xml:id="tn893aq" startid="#nuh0qfl" />
+                  </measure>
+                  <measure xml:id="m1rnusk8" n="3">
+                     <staff xml:id="sholu0v" n="1">
+                        <layer xml:id="luq1oja" n="1">
+                           <note xml:id="n817ank" dur.ppq="5040" dur="8" oct="3" pname="f" />
+                           <note xml:id="n13vtg3o" dur.ppq="5040" dur="8" oct="3" pname="a" />
+                           <note xml:id="nbkvha6" dur.ppq="5040" dur="8" oct="4" pname="c" />
+                           <note xml:id="n1b2deud" dur.ppq="5040" dur="8" oct="3" pname="f" />
+                           <note xml:id="n1huqg0w" dur.ppq="5040" dur="8" oct="3" pname="a" />
+                           <note xml:id="n1mv2gs6" dur.ppq="5040" dur="8" oct="4" pname="c" />
+                           <note xml:id="n1mtosg3" dur.ppq="5040" dur="8" oct="3" pname="f" />
+                           <note xml:id="nbgxpf5" dur.ppq="5040" dur="8" oct="3" pname="b">
+                              <accid xml:id="a1fdqzal" accid="f" />
+                           </note>
+                           <note xml:id="n1qighzd" dur.ppq="5040" dur="8" oct="4" pname="d" />
+                           <note xml:id="n1pnw11q" dur.ppq="5040" dur="8" oct="3" pname="f" />
+                           <note xml:id="n23jq5r" dur.ppq="5040" dur="8" oct="3" pname="b">
+                              <accid xml:id="a1lp2bt8" accid="n" />
+                           </note>
+                           <note xml:id="nzg0da8" dur.ppq="5040" dur="8" oct="4" pname="d" />
+                        </layer>
+                     </staff>
+                     <tie xml:id="tfgpv5t" startid="#n817ank" />
+                  </measure>
+               </section>
+            </score>
+         </mdiv>
+      </body>
+   </music>
+</mei>

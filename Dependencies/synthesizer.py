@@ -7,7 +7,7 @@ from pedalboard import Pedalboard, Chorus, Reverb, Compressor, Distortion
 
 
 def make_audio_file(score: Score, filepath="default", instrument="mandolin"):
-    # print(score.time_sig, score.tempo)
+    print(score.time_sig, score.tempo)
 
     samples_per_measure = int(
         (60.0/score.tempo)*float(score.time_sig[0])*Score.sample_rate)
@@ -16,26 +16,22 @@ def make_audio_file(score: Score, filepath="default", instrument="mandolin"):
                           samples_per_measure)
 
     curr_measure = 1
-
+    start = 0
     for staff in score.staves:
-        start = 0
+        # start = 0
         for layer in staff.layers:
-            start = 0
+            # start = 0
             for event in layer:
-                if event.measure != curr_measure:
-                    start = int((event.measure-1)*samples_per_measure)
-                    curr_measure = event.measure
 
-                event_time = (60.0/score.tempo) * \
-                    (float(score.time_sig[1])/event.length)
+                if event.measure != curr_measure:
+                    curr_measure = event.measure
+                    start = int((event.measure-1)*samples_per_measure)
+
+                event_time = float((60.0/score.tempo) *
+                                   (float(score.time_sig[1])/event.length))
 
                 num_samples = int(event_time * Score.sample_rate)
-                smooth_gap = int(.3*num_samples)
-
                 num_sound_samples = num_samples
-
-                if start + num_samples < len(audio_data):
-                    num_sound_samples = num_samples+smooth_gap
 
                 if isinstance(event, Chord):
                     chord_data = np.zeros(num_sound_samples)
@@ -63,8 +59,8 @@ def make_audio_file(score: Score, filepath="default", instrument="mandolin"):
                     chord_data /= max(chord_data)
                     try:
                         audio_data[start:start+num_sound_samples] += chord_data
-                    except ValueError:
-                        print(event)
+                    except ValueError as e:
+                        print("***Error encountered in " + str(curr_measure))
                         pass
 
                 elif isinstance(event, Note):
@@ -93,8 +89,8 @@ def make_audio_file(score: Score, filepath="default", instrument="mandolin"):
 
                     try:
                         audio_data[start:start+num_sound_samples] += note_data
-                    except ValueError:
-                        print(event)
+                    except ValueError as e:
+                        print("***Error encountered in " + str(curr_measure))
                         pass
 
                 start += num_samples
